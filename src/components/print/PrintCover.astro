@@ -1,0 +1,16 @@
+---
+interface Props {
+  cover: string;
+  coverAlt: string;
+  authorName: string;
+}
+
+const { cover, coverAlt, authorName } = Astro.props;
+---
+
+<div class="imgwrap">
+  <img src={cover} alt={coverAlt} />
+  <div class="cap">
+    <span>© {authorName}</span>
+  </div>
+</div>

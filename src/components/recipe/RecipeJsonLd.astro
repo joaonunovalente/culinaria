@@ -1,0 +1,57 @@
+---
+/**
+ * Full Schema.org Recipe graph: what Google needs for rich results.
+ * Ingredients/directions are flattened from the grouped frontmatter so
+ * editors keep writing sections while crawlers get plain string arrays.
+ */
+import { absoluteUrl } from "@/lib/url";
+import { recipeHref, type Recipe } from "@/lib/recipes";
+import { siteConfig } from "@/config/site";
+import { flattenIngredients, flattenSteps } from "@/lib/print";
+
+interface Props {
+  recipe: Recipe;
+  canonicalPath?: string;
+}
+
+const { recipe, canonicalPath } = Astro.props;
+const url = absoluteUrl(canonicalPath ?? recipeHref(recipe));
+const image = absoluteUrl(recipe.data.cover);
+const ingredients = flattenIngredients(recipe.data.ingredients)
+  .filter((b) => b.kind === "item")
+  .map((b) => b.text);
+const steps = flattenSteps(recipe.data.directions);
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  name: recipe.data.title,
+  description: recipe.data.excerpt,
+  image: [image],
+  url,
+  mainEntityOfPage: url,
+  author: { "@type": "Person", name: siteConfig.authorName },
+  publisher: {
+    "@type": "Organization",
+    name: siteConfig.name,
+    url: siteConfig.siteUrl,
+  },
+  datePublished: recipe.data.date?.toISOString(),
+  recipeCategory: recipe.data.category,
+  ...(recipe.data.prepTime ? { prepTime: recipe.data.prepTime } : {}),
+  ...(recipe.data.cookTime ? { cookTime: recipe.data.cookTime } : {}),
+  totalTime: recipe.data.totalTime,
+  ...(recipe.data.servings
+    ? { recipeYield: `${recipe.data.servings} ${recipe.data.servingsUnit ?? "pessoas"}` }
+    : {}),
+  recipeIngredient: ingredients,
+  recipeInstructions: steps.map((s) => ({
+    "@type": "HowToStep",
+    position: s.n,
+    ...(s.head ? { name: s.head } : {}),
+    text: s.text,
+  })),
+};
+---
+
+<script is:inline type="application/ld+json" set:html={JSON.stringify(schema)} />

@@ -1,0 +1,25 @@
+---
+import type { PrintSection } from "@/lib/print";
+
+interface Props {
+  directions: PrintSection[];
+}
+
+const { directions } = Astro.props;
+---
+
+<div class="directions-wrapper">
+  <h2 class="heading m">Instruções</h2>
+  <div class="directions-list c-richtext">
+    {directions.map((section) => (
+      <>
+        {section.heading && <h3>{section.heading}</h3>}
+        <ol start="1" role="list">
+          {section.items.map((step) => (
+            <li>{step}</li>
+          ))}
+        </ol>
+      </>
+    ))}
+  </div>
+</div>

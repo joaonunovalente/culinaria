@@ -1,0 +1,48 @@
+---
+/**
+ * "Share recipe" row at the top of the recipe section.
+ * Layout and classes stay inline (legacy markup, verbatim); the links themselves
+ * are built by `shareLinks` in @/lib/share from the page being shared.
+ */
+
+import { shareLinks } from "@/lib/share";
+
+interface Props {
+  /** Page being shared. Site-relative paths are resolved against `siteUrl`. */
+  url: string;
+  /** Headline the network pre-fills. */
+  title: string;
+  /** Optional summary, used for Pinterest and the email body. */
+  description?: string;
+  /** Site-relative or absolute image path, e.g. "/images/foo.webp". */
+  image?: string;
+}
+
+const { url, title, description, image } = Astro.props;
+const links = shareLinks({ url, title, description, image });
+---
+
+<div class="_12-columns">
+  <div class="column desktop-10 tablet-12">
+    <div class="recipe-share-wrapper fade-up">
+      <div>Partilhar receita</div>
+      <div class="social-links-wrapper align-left">
+        {links.map(({ label, href, icon }) => {
+          // `mailto:` has no window to open, so only the network links go elsewhere.
+          const external = href.startsWith("http");
+          return (
+            <a
+              href={href}
+              target={external ? "_blank" : undefined}
+              rel={external ? "noopener noreferrer" : undefined}
+              aria-label={`Partilhar no ${label}`}
+              class="social-link c-inline-block"
+            >
+              <img src={icon} loading="lazy" alt="" class="social-icon" />
+            </a>
+          );
+        })}
+      </div>
+    </div>
+  </div>
+</div>

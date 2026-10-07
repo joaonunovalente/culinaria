@@ -1,0 +1,56 @@
+---
+import CategoryTag from "@/components/CategoryTag.astro";
+import { categories, type Category } from "@/config/categories";
+
+/**
+ * Category tag row, shared by the home, recipes and category pages.
+ * Content stays inline (legacy markup, verbatim).
+ */
+
+interface Props {
+  /** Highlights the tag of the category page currently being viewed. */
+  current?: Category | string;
+  /** Listing pages animate the row; the home hero does not. */
+  fadeUp?: boolean;
+  /** Adds a final "Todas" pill linking to the categories index. */
+  showAll?: boolean;
+}
+
+const { current, fadeUp = false, showAll = false } = Astro.props;
+---
+
+<div class:list={["category-wrapper", fadeUp && "fade-up", "c-dyn-list"]}>
+  <div role="list" class="category-list c-dyn-items">
+    {categories.map((cat) => (
+      <div role="listitem" class="category-item c-dyn-item">
+        <CategoryTag category={cat} current={current !== undefined && cat === current} />
+      </div>
+    ))}
+    {showAll && (
+      <div role="listitem" class="category-item c-dyn-item">
+        <a href="/categorias/" class="category-tag-outer c-inline-block category-tag-all">
+          <span class="category-tag">Todas →</span>
+        </a>
+      </div>
+    )}
+  </div>
+</div>
+
+<style>
+  /* Pill "Todas": contorno dourado em vez de cor sólida, para se distinguir
+     das pills de categoria sem parecer um simples texto. */
+  .category-tag-all {
+    text-decoration: none;
+  }
+
+  .category-tag-all .category-tag {
+    border: 1px solid var(--gold);
+    background: transparent;
+    color: var(--gold);
+  }
+
+  .category-tag-all:hover .category-tag {
+    background: var(--gold);
+    color: var(--white);
+  }
+</style>

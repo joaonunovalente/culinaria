@@ -1,0 +1,45 @@
+---
+import Icon from "@/components/ui/Icon.astro";
+import { printRecipeHref, type Recipe } from "@/lib/recipes";
+
+interface Props {
+  recipe: Recipe;
+}
+
+const { recipe } = Astro.props;
+---
+
+<div class="button-wrapper print-bottom-wrapper">
+  <a
+    href={printRecipeHref(recipe)}
+    class="button c-button"
+    target="_blank"
+    rel="noopener"
+    aria-label="Imprimir (abre numa nova janela)"
+  >
+    <Icon name="print" />
+    Imprimir
+  </a>
+  <a
+    href="#content"
+    class="button tertiary c-inline-block back-button back-to-top-button"
+    data-back-to-top
+  >
+    <span class="back-label">
+      <Icon name="up" /> Voltar ao topo
+    </span>
+    <span class="button-underline"></span>
+    <span class="button-underline-hover"></span>
+  </a>
+</div>
+
+<style>
+  .print-bottom-wrapper {
+    margin-top: 40px;
+  }
+  .print-bottom-wrapper .back-to-top-button {
+    margin-left: auto;
+    margin-right: -8px;
+    flex-shrink: 0;
+  }
+</style>

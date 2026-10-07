@@ -1,0 +1,20 @@
+---
+import Icon from "@/components/ui/Icon.astro";
+
+interface Props {
+  href: string;
+  label: string;
+  icon?: "back" | "up" | "down";
+  class?: string;
+}
+
+const { href, label, icon = "back", class: className } = Astro.props;
+---
+
+<a href={href} class:list={["button", "tertiary", "c-inline-block", "back-button", className]}>
+  <span class="back-label">
+    <Icon name={icon} /> {label}
+  </span>
+  <span class="button-underline"></span>
+  <span class="button-underline-hover"></span>
+</a>

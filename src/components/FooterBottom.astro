@@ -1,0 +1,49 @@
+---
+/**
+ * Bottom of the footer: copyright, developer credit and the legal links
+ * (Registo de Alterações, Política de Privacidade). The developer credit comes
+ * from `footer.credits` in @/config/site.
+ */
+
+import { footer, siteConfig } from "@/config/site";
+
+// Resolved when the page is rendered, not when the visitor loads it: this site
+// builds to static HTML, so the year is baked into every file at build time and
+// only rolls over on the next deploy. Rebuild each January to refresh it.
+const copyrightYear = new Date().getFullYear();
+
+// Exact match only: the legal links are standalone pages, not section roots.
+const currentPath = Astro.url.pathname;
+const isCurrent = (href: string) => currentPath === href;
+---
+
+<div class="footer-bottom">
+  <div class="container">
+    <div class="footer-bottom-wrapper">
+      <div class="footer-text">
+        © {siteConfig.name} {copyrightYear}.{" "}
+        <a href={footer.credits.developerUrl} target="_blank">
+          {footer.credits.developerName}
+        </a>
+        .
+      </div>
+      <div class="footer-text footer-text-legal">
+        Consultar a{" "}
+        <a
+          href="/politica-de-privacidade/"
+          aria-current={isCurrent("/politica-de-privacidade/") ? "page" : undefined}
+        >
+          Política de Privacidade
+        </a>{" "}
+        e o{" "}
+        <a
+          href="/registo-de-alteracoes/"
+          aria-current={isCurrent("/registo-de-alteracoes/") ? "page" : undefined}
+        >
+          Registo de Alterações
+        </a>
+        .
+      </div>
+    </div>
+  </div>
+</div>

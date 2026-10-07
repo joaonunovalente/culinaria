@@ -1,0 +1,30 @@
+---
+import type { PrintSection } from "@/lib/print";
+
+interface Props {
+  ingredients: PrintSection[];
+}
+
+const { ingredients } = Astro.props;
+---
+
+<div class="ingredients-card">
+  <h2 class="heading m">Ingredientes</h2>
+  <div class="ingredients-list c-richtext">
+    {ingredients.map((section) => (
+      <>
+        {section.heading && <h3>{section.heading}</h3>}
+        <ul role="list">
+          {section.items.map((item) => (
+            <li>
+              <label class="ingredient-check">
+                <input type="checkbox" class="ingredient-box" />
+                <span class="ingredient-text">{item}</span>
+              </label>
+            </li>
+          ))}
+        </ul>
+      </>
+    ))}
+  </div>
+</div>

@@ -1,0 +1,15 @@
+---
+import Page from "@/layouts/Page.astro";
+import AboutHero from "@/components/AboutHero.astro";
+import AboutProfile from "@/components/AboutProfile.astro";
+import AboutFacts from "@/components/AboutFacts.astro";
+import AboutQuote from "@/components/AboutQuote.astro";
+import { about } from "@/config/about";
+---
+
+<Page title={about.heading} description={about.intro}>
+  {about.showHero && <AboutHero />}
+  {about.showProfile && <AboutProfile />}
+  {about.showFacts && <AboutFacts />}
+  {about.quote.enabled && <AboutQuote />}
+</Page>

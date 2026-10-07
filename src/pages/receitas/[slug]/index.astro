@@ -1,0 +1,75 @@
+---
+import { getCollection, render } from "astro:content";
+import Page from "@/layouts/Page.astro";
+import ShareBlock from "@/components/ShareBlock.astro";
+import RecipeHero from "@/components/recipe/RecipeHero.astro";
+import IngredientsList from "@/components/recipe/IngredientsList.astro";
+import DirectionsList from "@/components/recipe/DirectionsList.astro";
+import VideoEmbed from "@/components/recipe/VideoEmbed.astro";
+import RecipeSidebar from "@/components/recipe/RecipeSidebar.astro";
+import RecipeActions from "@/components/recipe/RecipeActions.astro";
+import RecipeJsonLd from "@/components/recipe/RecipeJsonLd.astro";
+import CoverImage from "@/components/ui/CoverImage.astro";
+import { getRecipeStaticPaths, getRelated, recipeHref, visibleRecipes } from "@/lib/recipes";
+import { imageSize } from "@/lib/images";
+
+export const getStaticPaths = getRecipeStaticPaths;
+
+const { recipe } = Astro.props;
+const allRecipes = visibleRecipes(await getCollection("recipes"));
+const related = getRelated(allRecipes, recipe);
+const { Content } = await render(recipe);
+const coverSize = imageSize(recipe.data.cover);
+---
+
+<Page
+  title={recipe.data.title}
+  description={recipe.data.excerpt}
+  image={recipe.data.cover}
+  imageWidth={coverSize.width}
+  imageHeight={coverSize.height}
+  type="article"
+>
+  <RecipeJsonLd recipe={recipe} />
+  <section class="section">
+    <div class="container">
+      <RecipeHero recipe={recipe} />
+    </div>
+  </section>
+
+  <div class="container">
+    <div class="recipe-hero-image-wrapper fade-up">
+      <CoverImage src={recipe.data.cover} alt={recipe.data.coverAlt} eager />
+    </div>
+  </div>
+
+  <section id="recipe" class="section double-bottom">
+    <div class="container">
+      <ShareBlock
+        url={recipeHref(recipe)}
+        title={recipe.data.title}
+        description={recipe.data.excerpt}
+        image={recipe.data.cover}
+      />
+      <div class="_12-columns align-top">
+        <div class="column desktop-6 tablet-8 mobile-12">
+          <IngredientsList ingredients={recipe.data.ingredients} />
+          <DirectionsList directions={recipe.data.directions} />
+          <VideoEmbed enabled={recipe.data.video} />
+          <div class="description-wrapper">
+            <div class="description-text c-richtext">
+              <Content />
+            </div>
+          </div>
+          <RecipeActions recipe={recipe} />
+        </div>
+        <div class="column desktop-1 tablet-0"></div>
+        <div class="column desktop-3 tablet-4 mobile-12">
+          <RecipeSidebar related={related} />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script src="../../../scripts/back-to-top.ts"></script>
+</Page>

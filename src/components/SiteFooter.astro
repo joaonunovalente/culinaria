@@ -1,0 +1,21 @@
+---
+/**
+ * Site footer, assembled from its three sections: FooterTop, FooterMiddle and
+ * FooterBottom. Each section owns its own markup and data.
+ *
+ * FooterTop is a newsletter call to action, so it follows
+ * `newsletter.showInFooter` (on top of the newsletter master switch `enabled`)
+ * and disappears when either is turned off.
+ */
+
+import FooterTop from "@/components/FooterTop.astro";
+import FooterMiddle from "@/components/FooterMiddle.astro";
+import FooterBottom from "@/components/FooterBottom.astro";
+import { newsletter } from "@/config/newsletter";
+---
+
+<footer class="footer">
+  {newsletter.enabled && newsletter.showInFooter && <FooterTop />}
+  <FooterMiddle />
+  <FooterBottom />
+</footer>

@@ -1,0 +1,33 @@
+---
+/**
+ * Standard page shell: SEO layout + header + `<main id="content">` + footer.
+ * Keeps every page on the same landmark structure without repeating it.
+ */
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import SiteHeader from "@/components/SiteHeader.astro";
+import SiteFooter from "@/components/SiteFooter.astro";
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  imageWidth?: number;
+  imageHeight?: number;
+  type?: "website" | "article";
+  noindex?: boolean;
+  prevUrl?: string;
+  nextUrl?: string;
+  structuredData?: Record<string, unknown> | Record<string, unknown>[];
+  mainClass?: string;
+}
+
+const { mainClass = "main-wrapper", ...layoutProps } = Astro.props;
+---
+
+<BaseLayout {...layoutProps}>
+  <SiteHeader />
+  <main id="content" class={mainClass}>
+    <slot />
+  </main>
+  <SiteFooter />
+</BaseLayout>

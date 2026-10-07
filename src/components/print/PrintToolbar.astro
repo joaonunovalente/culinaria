@@ -1,0 +1,26 @@
+---
+interface Props {
+  backHref: string;
+  recipeTitle: string;
+}
+
+const { backHref, recipeTitle } = Astro.props;
+---
+
+<section class="print-pagehead">
+  <div class="print-pagehead-row">
+    <a class="print-back" href={backHref}>
+      <svg aria-hidden="true" width="14" height="14" viewBox="0 0 16 12" fill="none">
+        <path
+          d="M14.5 6H1.5M5 2.5 1.5 6 5 9.5"
+          stroke="currentColor"
+          stroke-width="1.2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+      Voltar à receita
+    </a>
+    <h1 class="print-title">{recipeTitle}</h1>
+  </div>
+</section>

@@ -1,0 +1,165 @@
+---
+/**
+ * Lateral com as configurações. Só vive no ecrã:
+ * está escondida na impressão e sem JS. O `print-paginator.ts` lê e
+ * aplica as escolhas (mesmas chaves `data-setting` de sempre).
+ */
+
+import type { PrintMetaField } from "@/lib/print";
+
+interface Props {
+  metaFields: PrintMetaField[];
+}
+
+const { metaFields } = Astro.props;
+---
+
+<aside class="print-sidebar" id="print-settings-panel" aria-label="Configurações" tabindex="-1">
+  <div class="print-sidebar-head">
+    <h2 class="print-sidebar-title">Configurações</h2>
+    <button
+      class="print-sidebar-close"
+      id="print-settings-close"
+      type="button"
+      aria-label="Fechar configurações"
+      hidden
+    >
+      <svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <path
+          d="M2 2l12 12M14 2L2 14"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+        />
+      </svg>
+    </button>
+  </div>
+
+  <p class="print-format">Folha A4</p>
+
+  <div class="print-groups">
+    <details class="print-group" name="print-settings" open>
+      <summary><span>Conteúdo da folha</span></summary>
+      <div class="print-group-body">
+        <div class="print-group-inner">
+          <label class="print-setting">
+            <input type="checkbox" class="ingredient-box" data-setting="cover" checked />
+            <span class="print-setting-text">
+              <strong>Fotografia de capa</strong>
+            </span>
+          </label>
+          <label class="print-setting">
+            <input type="checkbox" class="ingredient-box" data-setting="excerpt" checked />
+            <span class="print-setting-text">
+              <strong>Descrição</strong>
+            </span>
+          </label>
+          <label class="print-setting">
+            <input type="checkbox" class="ingredient-box" data-setting="qr" checked />
+            <span class="print-setting-text">
+              <strong>Código QR</strong>
+            </span>
+          </label>
+          <label class="print-setting">
+            <input type="checkbox" class="ingredient-box" data-setting="url" checked />
+            <span class="print-setting-text">
+              <strong>Endereço no rodapé</strong>
+            </span>
+          </label>
+        </div>
+      </div>
+    </details>
+
+    <details class="print-group" name="print-settings">
+      <summary><span>Tempos e doses</span></summary>
+      <div class="print-group-body">
+        <div class="print-group-inner">
+          <label class="print-setting">
+            <input type="checkbox" class="ingredient-box" data-setting="metabar" checked />
+            <span class="print-setting-text">
+              <strong>Mostrar faixa</strong>
+            </span>
+          </label>
+          {metaFields.length > 0 && (
+            <div class="print-meta-fields" id="print-meta-fields">
+              {metaFields.map((field) => (
+                <label class="print-meta-field">
+                  <span>{field.label}</span>
+                  <input
+                    type="text"
+                    data-meta-field={field.key}
+                    data-default={field.value}
+                    value={field.value}
+                    placeholder={field.value}
+                    maxlength="60"
+                  />
+                </label>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    </details>
+
+    <details class="print-group" name="print-settings">
+      <summary><span>Outros</span></summary>
+      <div class="print-group-body">
+        <div class="print-group-inner">
+          <label class="print-setting">
+            <input type="checkbox" class="ingredient-box" data-setting="conthead" checked />
+            <span class="print-setting-text">
+              <strong>Cabeçalho</strong>
+            </span>
+          </label>
+          <label class="print-setting">
+            <input type="checkbox" class="ingredient-box" data-setting="checkboxes" />
+            <span class="print-setting-text">
+              <strong>Caixas para riscar ingredientes</strong>
+            </span>
+          </label>
+          <label class="print-setting">
+            <input type="checkbox" class="ingredient-box" data-setting="narrow" />
+            <span class="print-setting-text">
+              <strong>Margens estreitas</strong>
+            </span>
+          </label>
+        </div>
+      </div>
+    </details>
+  </div>
+
+  <div class="print-actions">
+    <button class="button print-btn" id="print-action" type="button">
+      <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none">
+        <path
+          d="M6 9V2h12v7"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+        <path
+          d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+        <rect
+          x="6"
+          y="14"
+          width="12"
+          height="8"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+      Imprimir
+    </button>
+    <button class="print-settings-reset" id="print-settings-reset" type="button">
+      Repor predefinições
+    </button>
+  </div>
+</aside>

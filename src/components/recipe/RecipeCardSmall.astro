@@ -1,0 +1,32 @@
+---
+import CategoryTag from "@/components/CategoryTag.astro";
+import CoverImage from "@/components/ui/CoverImage.astro";
+import { recipeHref, type Recipe } from "@/lib/recipes";
+
+interface Props {
+  recipe: Recipe;
+}
+
+const { recipe } = Astro.props;
+const href = recipeHref(recipe);
+---
+
+<article class="recipe-card">
+  <a href={href} class="image-wrapper card c-inline-block">
+    <CoverImage src={recipe.data.cover} alt={recipe.data.coverAlt} />
+    <div class="recipe-card-category--on-image c-dyn-list">
+      <div role="list" class="c-dyn-items">
+        <div role="listitem" class="c-dyn-item">
+          <CategoryTag category={recipe.data.category} linked={false} />
+        </div>
+      </div>
+    </div>
+  </a>
+  <a href={href} class="recipe-card-text-wrapper small c-inline-block">
+    <h3 class="heading xs">{recipe.data.title}</h3>
+    <div class="recipe-card-time">
+      <img src="/icons/icon-cook-time.svg" loading="lazy" alt="" class="recipe-icon small" />
+      <div class="recipe-time small">{recipe.data.totalTime}</div>
+    </div>
+  </a>
+</article>

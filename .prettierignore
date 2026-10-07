@@ -1,0 +1,14 @@
+node_modules
+.astro
+dist
+.output
+.vinxi
+.wrangler
+test-results
+package-lock.json
+legacy
+src/styles/culinaria.css
+src/scripts/culinaria.js
+
+# Vendored legacy template: original formatting and class names, kept as-is.
+src/pages/admin/style-guide.astro

@@ -1,0 +1,30 @@
+---
+/**
+ * "Featured in" press-logo row, shared by the home and about pages.
+ * Heading and logos come from the `featuredIn` export in @/config/site.
+ * Markup follows the original template classes.
+ */
+
+import { featuredIn } from "@/config/site";
+---
+
+<div class="featured-logo-wrapper fade-up">
+  <div class="heading-wrapper centered">
+    <h3 class="heading xxs">{featuredIn.title}</h3>
+  </div>
+  <div class="featured-logo-row">
+    {featuredIn.items.map(({ label, href, icon }) => {
+      const external = !href.startsWith("/");
+      return (
+        <a
+          href={href}
+          target={external ? "_blank" : undefined}
+          rel={external ? "noopener noreferrer" : undefined}
+          class="featured-logo-link c-inline-block"
+        >
+          <img src={icon} loading="lazy" alt={`Logótipo do ${label}`} class="featured-logo-image" />
+        </a>
+      );
+    })}
+  </div>
+</div>

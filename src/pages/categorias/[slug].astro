@@ -1,0 +1,95 @@
+---
+import { getCollection } from "astro:content";
+import Page from "@/layouts/Page.astro";
+import RecipeCard from "@/components/RecipeCard.astro";
+import CategoryList from "@/components/CategoryList.astro";
+import {
+  categories,
+  categoryDescriptions,
+  categorySlug,
+  getCategoryStyle,
+} from "@/config/categories";
+import { getRecipesByCategory } from "@/lib/recipes";
+
+export async function getStaticPaths() {
+  return categories.map((category) => ({
+    params: { slug: categorySlug(category) },
+    props: { category },
+  }));
+}
+
+const { category } = Astro.props;
+const allRecipes = await getCollection("recipes");
+const recipes = getRecipesByCategory(allRecipes, category);
+const description = categoryDescriptions[category];
+const style = getCategoryStyle(category);
+---
+
+<Page title={category} description={description}>
+  <section class="section double-bottom">
+    <div class="container">
+      <div class="cat-detail-hero fade-up">
+        <h1 class="heading xxl">{category}</h1>
+        <p class="cat-subtitle">{description}</p>
+        <p class="cat-meta">
+          <span style={`color:${style.color}`}>
+            {recipes.length} {recipes.length === 1 ? "receita" : "receitas"}
+          </span>
+        </p>
+      </div>
+      <CategoryList fadeUp current={category} showAll />
+      <div class="c-dyn-list">
+        <div role="list" class="recipe-card-list c-dyn-items">
+          {recipes.map((recipe) => (
+            <div role="listitem" class="fade-up c-dyn-item">
+              <RecipeCard recipe={recipe} />
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+</Page>
+
+<style>
+  .cat-detail-hero {
+    max-width: 640px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  /* A fila de pills vinha com 24px em cima + 40px em baixo do legado,
+     somados aos 80px da section: o buraco entre hero e cartões. Aqui fica
+     compacta e chega diretamente aos cartões. */
+  .cat-detail-hero + .category-wrapper {
+    margin-top: 28px;
+    margin-bottom: 32px;
+  }
+
+  .cat-meta {
+    margin: 20px 0 0;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+  }
+
+  .cat-detail-hero .heading.xxl {
+    margin: 0 0 16px;
+    text-wrap: balance;
+  }
+
+  .cat-subtitle {
+    margin: 0;
+    color: var(--grey);
+    font-size: 18px;
+    line-height: 1.6;
+    text-wrap: balance;
+  }
+
+  @media (max-width: 767px) {
+    .cat-subtitle {
+      font-size: 16px;
+    }
+  }
+</style>

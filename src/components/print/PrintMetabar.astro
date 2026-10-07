@@ -1,0 +1,40 @@
+---
+interface Props {
+  prepTime?: string | null;
+  forno?: string | null;
+  servings?: string | null;
+  servingsUnit?: string | null;
+  difficulty?: string | null;
+}
+
+const { prepTime, forno, servings, servingsUnit, difficulty } = Astro.props;
+---
+
+<div class="metabar">
+  {prepTime && (
+    <div data-meta="prep">
+      <b>Preparação</b>
+      <span class="val">{prepTime}</span>
+    </div>
+  )}
+  {forno && (
+    <div data-meta="forno">
+      <b>Forno</b>
+      <span class="val">{forno}</span>
+    </div>
+  )}
+  {servings && (
+    <div data-meta="servings">
+      <b>Doses</b>
+      <span class="val">
+        {servings} {servingsUnit ?? "pessoas"}
+      </span>
+    </div>
+  )}
+  {difficulty && (
+    <div data-meta="difficulty">
+      <b>Dificuldade</b>
+      <span class="val">{difficulty}</span>
+    </div>
+  )}
+</div>

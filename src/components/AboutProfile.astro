@@ -1,0 +1,54 @@
+---
+/**
+ * About page profile row: tall image beside the author greeting and bio.
+ * The image, greeting prefix and the two bio paragraphs come from the
+ * `about` export in @/config/about; only the name stays in `siteConfig`
+ * (@/config/site) as global identity. The press-logo row below follows the
+ * existing `featuredIn` switch in @/config/site.
+ * Markup follows the original template classes.
+ */
+
+import FeaturedIn from "@/components/FeaturedIn.astro";
+import { featuredIn, siteConfig } from "@/config/site";
+import { about } from "@/config/about";
+---
+
+<section class="section no-top-padding">
+  <div class="container">
+    <div class="_12-columns space-between feature-row">
+      <div class="column desktop-6 tablet-12 fade-up">
+        <div class="tall-image-wrapper feature-image">
+          <img
+            src={about.profileImage}
+            loading="lazy"
+            alt={about.profileImageAlt}
+            class="tall-image"
+          />
+        </div>
+      </div>
+      <div class="column desktop-5 tablet-12 fade-up about-profile-text">
+        <h2 class="heading xl">
+          {about.greetingPrefix} {siteConfig.authorName}!
+        </h2>
+        {about.bio.map((paragraph) => (
+          <p>{paragraph}</p>
+        ))}
+        {(about.buttonLabel || about.secondaryButtonLabel) && (
+          <div class="button-wrapper">
+            {about.buttonLabel && (
+              <a href={about.buttonHref} class="button c-button">
+                {about.buttonLabel}
+              </a>
+            )}
+            {about.secondaryButtonLabel && (
+              <a href={about.secondaryButtonHref} class="button secondary c-button">
+                {about.secondaryButtonLabel}
+              </a>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+    {featuredIn.enabled && <FeaturedIn />}
+  </div>
+</section>

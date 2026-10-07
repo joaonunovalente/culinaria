@@ -1,0 +1,133 @@
+---
+/**
+ * Contact page. The heading, intro and provider settings come from the
+ * `contact` export in @/config/contact. Submit handling is driven by one
+ * derived mode, published to the script on the form as `data-submit`:
+ *
+ * - "demo"   - `contact.action` is empty. The script in
+ *              /scripts/culinaria.js intercepts the submit and shows the inline
+ *              success state. Nothing is actually sent anywhere.
+ * - "native" - the browser posts to the action and the backend shows its own
+ *              confirmation page. The script leaves the form alone.
+ * - "ajax"   - the script fetches the action and shows the inline success
+ *              panel, so the visitor stays on the page. Needs a backend that
+ *              sends CORS headers.
+ *
+ * When `contact.enabled` is false the form is replaced with a mailto fallback
+ * built from `siteConfig.email`, so the page never shows a form that goes
+ * nowhere without explanation.
+ */
+
+import Page from "@/layouts/Page.astro";
+import { siteConfig } from "@/config/site";
+import { contact } from "@/config/contact";
+
+// An empty action means demo mode regardless of submitMode, so the two config
+// fields can never disagree about what the form will do.
+const submitMode = !contact.action ? "demo" : contact.submitMode;
+---
+
+<Page title={contact.heading} description={contact.intro}>
+  <section class="section">
+    <div class="container">
+      <div class="_12-columns">
+        <div class="column desktop-6 tablet-12 fade-up">
+          <div class="text-center">
+            <h1 class="heading xxl">{contact.heading}</h1>
+            <p>{contact.intro}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="section no-top-padding double-bottom">
+    <div class="container">
+      <div class="_12-columns space-between mobile-reverse">
+        <div class="column desktop-6 tablet-12 fade-up">
+          <div class="tall-image-wrapper">
+            <img
+              src="/images/contact-photo.webp"
+              loading="lazy"
+              alt="Suporte de utensílios em cima do balcão"
+              class="tall-image"
+            />
+          </div>
+        </div>
+        <div class="column desktop-5 tablet-12 fade-up">
+          <div class="c-form">
+            {contact.enabled ? (
+              <form
+                method={contact.method}
+                action={contact.action}
+                data-submit={submitMode}
+                data-success-url={contact.successUrl || undefined}
+                class="form"
+              >
+                {Object.entries(contact.extraFields).map(([name, value]) => (
+                  <input type="hidden" name={name} value={value} />
+                ))}
+                <div class="field-block">
+                  <label for="name" class="field-label">
+                    Nome
+                  </label>
+                  <input
+                    class="form-input c-input"
+                    maxlength="256"
+                    name={contact.nameFieldName}
+                    placeholder="Escreve o teu nome"
+                    type="text"
+                    id="name"
+                  />
+                </div>
+                <div class="field-block">
+                  <label for="email" class="field-label">
+                    E-mail
+                  </label>
+                  <input
+                    class="form-input c-input"
+                    maxlength="256"
+                    name={contact.emailFieldName}
+                    placeholder="Escreve o teu e-mail"
+                    type="email"
+                    id="email"
+                    required
+                  />
+                </div>
+                <div class="field-block">
+                  <label for="message" class="field-label">
+                    Mensagem
+                  </label>
+                  <textarea
+                    id="message"
+                    name={contact.messageFieldName}
+                    maxlength="5000"
+                    placeholder="Escreve aqui a tua mensagem"
+                    required
+                    class="form-input text-area c-input"
+                  ></textarea>
+                </div>
+                <input
+                  type="submit"
+                  data-wait="Aguarda..."
+                  class="button c-button"
+                  value="Enviar"
+                />
+              </form>
+            ) : (
+              <p>
+                O formulário de contacto está actualmente desativado. Entra em contacto connosco em{" "}
+                <a href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a>.
+              </p>
+            )}
+            <div class="form-success c-form-done">
+              <div>Obrigado! A tua mensagem foi recebida!</div>
+            </div>
+            <div class="form-error c-form-fail">
+              <div>Ups! Algo correu mal. Preenche os campos obrigatórios e tenta novamente.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</Page>

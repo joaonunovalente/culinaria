@@ -1,0 +1,25 @@
+---
+import RecipeCardStandard from "@/components/recipe/RecipeCardStandard.astro";
+import RecipeCardSmall from "@/components/recipe/RecipeCardSmall.astro";
+import type { Recipe } from "@/lib/recipes";
+
+interface Props {
+  recipe: Recipe;
+  /**
+   * - `card`: the standard listing card (image, title, time, category)
+   * - `small`: the compact sidebar card (image, title, time, category),
+   *   used for "Other recipes" exactly like the legacy template.
+   */
+  variant?: "card" | "small";
+  /** First-row cards load eagerly with high fetch priority (no CLS, faster LCP). */
+  eager?: boolean;
+}
+
+const { recipe, variant = "card", eager = false } = Astro.props;
+---
+
+{variant === "small" ? (
+  <RecipeCardSmall recipe={recipe} />
+) : (
+  <RecipeCardStandard recipe={recipe} eager={eager} />
+)}

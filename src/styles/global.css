@@ -1,0 +1,1041 @@
+@import "tailwindcss";
+@source "../**/*.{astro,ts,md}";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  color-scheme: light dark;
+  --white-smoke: #f9f7f3;
+  --grey: #5c5c5c;
+  --dark: #1b2629;
+  --gold: #9c702a;
+  --white: #ffffff;
+  /* Linha divisória (header, listas): tinta a 15%, como as `border` do footer. */
+  --line: #1b262926;
+}
+
+html.dark {
+  color-scheme: dark;
+  --white-smoke: #151312;
+  --grey: #cdc4b8;
+  --dark: #f3ece1;
+  --gold: #d3a356;
+  --white: #1e1b18;
+  --line: #f3ece126;
+}
+
+.wordmark {
+  display: inline-block;
+  color: var(--dark);
+  font-family: Lora, sans-serif;
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
+a.brand.c-nav-brand {
+  width: auto;
+}
+
+a.brand.footer.c-nav-brand {
+  width: auto;
+}
+
+@media (max-width: 479px) {
+  .wordmark {
+    font-size: 28px;
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.form-hp {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.skip-link {
+  position: fixed;
+  left: 1rem;
+  top: 1rem;
+  z-index: 100;
+  transform: translateY(-200%);
+  background: #000;
+  color: #fff;
+  padding: 0.75rem 1rem;
+  font-weight: 600;
+  border-radius: 0.375rem;
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+@media (max-width: 991px) {
+  .nav.c-nav[data-collapse] .c-nav-menu {
+    display: flex;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    /* Altura explícita com `dvh` para acompanhar a barra do browser em
+       mobile (com fallback para `vh`); sem isto o `height: 100vh` legado
+       do `culinaria.css` manda sozinho. */
+    height: 100vh;
+    height: 100dvh;
+    visibility: hidden;
+    transform: translateX(100%);
+    transition:
+      transform 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+      visibility 0s 0.6s;
+  }
+
+  .nav.c-nav.menu-open .c-nav-menu {
+    visibility: visible;
+    transform: translateX(0);
+    transition:
+      transform 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+      visibility 0s 0s;
+  }
+
+  .nav.c-nav[data-collapse] .menu-overlay {
+    display: block;
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity 0.45s ease-out,
+      visibility 0s 0.45s;
+  }
+
+  .nav.c-nav.menu-open .menu-overlay {
+    opacity: 1;
+    visibility: visible;
+    transition:
+      opacity 0.45s ease-out,
+      visibility 0s 0s;
+  }
+}
+
+html.has-open-menu,
+html.has-open-menu body {
+  overflow: hidden;
+  /* `clip` em vez de `hidden` (com fallback para browsers antigos): não cria
+     scroll containers, por isso o header `sticky` continua colado e o botão
+     X visível quando o drawer abre com scroll. Com `hidden` nos dois
+     elementos o sticky quebrava e o X saía do ecrã. */
+  overflow: clip;
+}
+
+/* Sticky header: esconde ao descer, mostra ao subir.
+   O easing anterior (expo-out) arranca muito rápido, por isso 0.5s vs 0.8s
+   parecia igual. Agora: esconder lento e linear, mostrar mais pronto. */
+.nav.c-nav {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  /* A caixa do `.nav` nunca leva `transform` em mobile: o drawer
+     (`.nav-menu`) e o `.menu-overlay` são `position: fixed` e um transform
+     num ancestral passaria a ser o containing block deles. O drawer de 100vh
+     contava então para o overflow da página e, nas páginas curtas (ex.:
+     Registo de Alterações), o scroll saltava para o topo. Em mobile o
+     deslizamento aplica-se ao `.nav-wrapper`, irmão do drawer; em desktop o
+     menu é estático, por isso esconder o `.nav` é seguro. */
+  padding-top: 0;
+  padding-bottom: 0;
+  background-color: transparent;
+}
+
+/* Barra visível do header, sempre a toda a largura. */
+.nav-bar {
+  background-color: var(--white-smoke, #f9f7f3);
+  padding-top: 32px;
+  padding-bottom: 32px;
+  /* Linha na base da barra. Vive aqui (e não no `.nav`) porque a caixa é a
+     única a ter largura total; em mobile vive no `.nav-wrapper`, que é a
+     barra visível e desliza como um bloco rígido. */
+  border-bottom: 1px solid var(--line);
+}
+
+@media (max-width: 991px) {
+  /* A `.nav-bar` é só uma casca transparente com a mesma altura de antes; a
+     barra visível (fundo + linha + conteúdo) é o `.nav-wrapper` em baixo. Sem
+     `transform` em nenhum ancestral do drawer (`position: fixed`), o menu
+     continua ancorado à viewport. */
+  .nav-bar {
+    padding-top: 0;
+    padding-bottom: 0;
+    border-bottom: 0;
+    background-color: transparent;
+  }
+
+  .nav.c-nav .nav-wrapper {
+    /* A barra visível vive nesta caixa para deslizar como um bloco rígido
+       (fundo, linha e conteúdo com o mesmo `transform`), igual ao desktop,
+       onde a barra inteira translada. A `margin` negativa compensa o padding
+       lateral do `.container` (24px), por isso a barra vai de extremo a
+       extremo sem mexer no alinhamento do conteúdo. */
+    background-color: var(--white-smoke, #f9f7f3);
+    border-bottom: 1px solid var(--line);
+    margin-left: -24px;
+    margin-right: -24px;
+    padding: 24px;
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .nav.c-nav.nav-hidden .nav-wrapper {
+    /* O wrapper já é a barra inteira, por isso basta sair a sua altura;
+       os -8px extra dão margem a arredondamentos de subpixel. */
+    transform: translateY(calc(-100% - 8px));
+    transition: transform 1s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
+
+@media (max-width: 479px) {
+  .nav.c-nav .nav-wrapper {
+    padding-top: 16px;
+    padding-bottom: 16px;
+  }
+}
+
+@media (min-width: 992px) {
+  /* O `.container` passa a ser a linha (logótipo à esquerda, menu à
+     direita) e o `.nav-wrapper` dissolve-se para não criar uma caixa
+     intermédia. */
+  .nav.c-nav > .nav-bar > .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  /* A `.nav-left` é 35% da linha e nos ~1000px espremia o search: garante
+     uma largura mínima digna (o item flex não encolhe abaixo disto). */
+  .nav-left .search-bar {
+    min-width: 240px;
+  }
+
+  .nav.c-nav .nav-wrapper {
+    display: contents;
+  }
+
+  .nav.c-nav {
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .nav.c-nav.nav-hidden {
+    transform: translateY(-102%);
+    transition: transform 1s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav.c-nav,
+  .nav-bar,
+  .nav.c-nav .nav-wrapper {
+    transition: none;
+  }
+}
+
+/* Search vive na barra ao lado da wordmark; só em mobile (<=479px) passa
+   para dentro do drawer — mesmo com o hamburger visível (<=991px), a barra
+   mantém o search. */
+.nav-menu .search-drawer {
+  display: none;
+}
+
+@media (max-width: 479px) {
+  .nav-left .search-bar {
+    display: none;
+  }
+
+  .nav-menu .search-drawer {
+    display: block;
+    align-self: stretch;
+    width: auto;
+    max-width: none;
+    /* O search sobe para a linha do toggle + X (que vivem na barra, por cima
+       do drawer). 140px à direita desviam dos dois botões (~62px switch +
+       ~50px hamburger + folga); o campo encolhe para caber ao lado. */
+    margin: -50px 140px 28px 0;
+  }
+
+  .nav-menu .search-drawer .form-input.search-nav {
+    width: 100%;
+    min-height: 52px;
+    margin-bottom: 0;
+    /* Anula o `display: none` legado do `.search-nav` dentro do drawer. */
+    display: block;
+  }
+}
+
+@media (max-width: 991px) {
+  .menu-button {
+    min-width: 48px;
+    min-height: 48px;
+    padding: 12px;
+  }
+
+  /* Com o hamburger visível a `.nav-left` ocupa 75% da linha e o search
+     esticava demais (ex.: ~500px aos 960px): limita-se à largura da barra. */
+  .nav-left .search-bar {
+    max-width: 320px;
+  }
+
+  /* O botão vive dentro da `.nav-bar` e o drawer é um irmão posterior com
+     `z-index: 999`: sem isto o drawer tapava o botão que o fecha. */
+  .nav.c-nav .menu-button {
+    z-index: 1001;
+  }
+}
+
+.nav.menu-open .hamburger-line {
+  width: 32px;
+  top: 24px;
+  transition:
+    transform 0.25s ease,
+    opacity 0.2s ease;
+}
+
+.nav.menu-open .hamburger-line.middle {
+  opacity: 0;
+}
+
+.nav.menu-open .hamburger-line:not(.middle):not(.bottom) {
+  transform: rotate(45deg);
+}
+
+.nav.menu-open .hamburger-line.bottom {
+  transform: rotate(-45deg);
+}
+
+/* Linha dourada por baixo do link do menu. O `.nav-underline` já vem no
+   markup (SiteHeader.astro), mas o tema entrega-o com `width: 0%` e sem
+   transição, ou seja invisível. Aqui ganha a largura do texto e cresce com
+   `scaleX` a partir do centro — animar `transform` não provoca reflow, ao
+   contrário de `width`.
+   Só em desktop: abaixo de 992px o `.nav-menu` é o drawer, onde os itens já
+   são grandes e não precisam de indicador. E só com `hover: hover` para o
+   `:hover` não ficar encravado depois de um toque em ecrãs táteis. */
+@media (min-width: 992px) and (hover: hover) {
+  .nav-link .nav-underline {
+    /* `inset-inline` espelha o `padding: 8px` do link para a linha ter a
+       largura do texto, e não da caixa já com o padding. */
+    inset-inline: 8px;
+    width: auto;
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .nav-link:hover .nav-underline,
+  .nav-link:focus-visible .nav-underline,
+  /* Página ativa: o `c--current` já vinha no markup sem qualquer regra nos
+     estilos, por isso a única pista era o `aria-current`. */
+  .nav-link.c--current .nav-underline {
+    transform: scaleX(1);
+  }
+}
+
+/* Sem animação, mas a linha (hover e página ativa) continua a aparecer. */
+@media (min-width: 992px) and (prefers-reduced-motion: reduce) {
+  .nav-link .nav-underline {
+    transition: none;
+  }
+}
+
+.nav-link:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+
+/* Registo de alterações: cada `.cl-item` traz `border-top` e `border-bottom`,
+   mas as versões vivem em `.column` separados, logo não são irmãos. Empilhadas,
+   as duas bordas desenham uma linha de 2px entre versões; o `~` apanha mesmo
+   com o `.column` pelo meio. Cada item fica só com a borda de baixo. */
+.cl-item ~ .cl-item {
+  border-top: 0;
+}
+
+/* A linha divisória do registo é a tinta do tema a 15% (`#1b262926`), que no
+   escuro é quase preto sobre quase preto e some. `--line` é o mesmo valor no
+   claro e a tinta clara a 15% no escuro, como as bordas do rodapé. */
+html.dark .cl-item {
+  border-color: var(--line);
+}
+
+/* A data não é um parágrafo: 14px contra os 18px do texto, para se distinguir
+   do título (24px) e do corpo. */
+.cl-date {
+  font-size: 14px;
+}
+
+/* No mobile o `.cl-item` empilha (coluna), mas o `.cl-text-wrapper` do tema
+   fica nos 50% do desktop e o texto quebra a meio da linha. Empilhado, o texto
+   ocupa a largura toda, com 24px de respiro abaixo da data. */
+@media (max-width: 767px) {
+  .cl-text-wrapper {
+    width: 100%;
+    margin-top: 24px;
+  }
+}
+
+html.js-anim .fade-up {
+  opacity: 0;
+  transform: translateY(24px);
+}
+
+html.js-anim .fade-up.is-visible {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 0.6s ease-out,
+    transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.js-anim .fade-up {
+    opacity: 1;
+    transform: none;
+  }
+
+  html.js-anim .fade-up.is-visible {
+    transition: none;
+  }
+}
+
+@media (max-width: 767px) {
+  .button-wrapper:has(.button:not(.tertiary) + .button:not(.tertiary)) {
+    gap: 16px;
+  }
+}
+
+/* "Mais receitas": as receitas depois do primeiro lote continuam no HTML, e é o
+ * script que lhes põe `is-overflow` e marca a lista como `is-paged` — só aí
+ * ficam escondidas. Sem JS, a listagem aparece inteira e o botão nem existe. */
+.recipe-card-list.is-paged .is-overflow {
+  display: none;
+}
+
+/* O `hidden` do botão sozinho não chega: o `.c-button` legado declara
+ * `display: inline-block`, que ganha ao `display: none` do browser. */
+.load-more[hidden] {
+  display: none;
+}
+
+@media (max-width: 479px) {
+  .button-wrapper:has(.button:not(.tertiary) + .button:not(.tertiary)) .button {
+    flex: 1 1 100%;
+    text-align: center;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 479px) {
+  .button-wrapper.mobile-full .button:not(.tertiary) {
+    flex: 1 1 100%;
+    text-align: center;
+    justify-content: center;
+  }
+}
+
+@media (min-width: 480px) and (max-width: 767px) {
+  .footer-top .form.horizontal {
+    flex-direction: row;
+  }
+}
+
+@media (max-width: 479px) {
+  .button-wrapper .button:not(.tertiary) {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
+
+@media (max-width: 991px) {
+  .about-profile-text {
+    margin-top: 16px;
+  }
+}
+
+.about-teaser-text .heading.xl {
+  margin-bottom: 32px;
+}
+
+.about-teaser-text p {
+  margin-bottom: 24px;
+}
+
+.about-teaser-text p:last-of-type {
+  margin-bottom: 0;
+}
+
+.about-teaser-text .button-wrapper {
+  margin-top: 48px;
+}
+
+@media (max-width: 991px) {
+  .about-teaser-text {
+    margin-top: 24px;
+  }
+}
+
+@media (max-width: 767px) {
+  .about-teaser-text .heading.xl {
+    margin-bottom: 28px;
+  }
+
+  .about-teaser-text p {
+    margin-bottom: 20px;
+  }
+
+  .about-teaser-text .button-wrapper {
+    margin-top: 40px;
+  }
+}
+
+@media (min-width: 992px) and (max-width: 1249px) {
+  .feature-row {
+    align-items: stretch;
+  }
+
+  .feature-image {
+    padding-bottom: 0;
+    height: 100%;
+  }
+}
+
+@media (max-width: 767px) {
+  .menu-button {
+    transform: none;
+  }
+}
+
+.menu-button:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+
+.search-summary {
+  margin-top: 24px;
+  margin-bottom: 40px;
+}
+
+.search-summary:empty {
+  display: none;
+}
+
+.search-summary code {
+  padding: 0.2em 0.5em;
+  border: 1px solid #9c702a33;
+  border-radius: 0.25rem;
+  background-color: #9c702a1a;
+  color: var(--dark, #1b2629);
+  font-size: 0.9em;
+  overflow-wrap: anywhere;
+}
+
+/* Alvo de toque do pill: só onde o pill é link (listas de categorias, badge do
+   cabeçalho da receita). No card da receita o pill é um `div` estático, sem
+   alvo a tocar — o `min-height` só o engordava e empurrava-o para cima da linha
+   do tempo. */
+@media (max-width: 767px) {
+  a.category-tag-outer > .category-tag {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+  }
+}
+
+/* Etiqueta da categoria sobre a imagem do card (standard, small e resultados
+   de pesquisa): canto superior esquerdo da imagem, com sombra para
+   destacar da fotografia. O `div` é estático (não é link para evitar
+   `<a>` dentro de `<a>`); o clique na imagem continua a abrir a receita. */
+.recipe-card .image-wrapper.card {
+  display: block;
+}
+
+.recipe-card-category--on-image {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  z-index: 2;
+}
+
+.recipe-card-category--on-image .category-tag {
+  box-shadow: 0 8px 20px rgb(0 0 0 / 0.22);
+}
+
+/* Sem o pill no rodapé, o wrapper de texto volta a um padding simétrico.
+   Nota: `culinaria.css` é importado depois de `global.css`, por isso estes
+   seletores levam `.recipe-card` à frente para ganhar em especificidade. */
+.recipe-card .recipe-card-text-wrapper {
+  padding-bottom: 32px;
+}
+
+.recipe-card .recipe-card-text-wrapper.small {
+  padding: 24px 24px 24px;
+}
+
+@media (max-width: 1249px) {
+  .recipe-card .recipe-card-text-wrapper {
+    padding-bottom: 24px;
+  }
+
+  .recipe-card .recipe-card-text-wrapper.small {
+    padding-bottom: 24px;
+  }
+}
+
+.directions-list ol,
+.description-text ol {
+  list-style-type: decimal;
+}
+
+/* Ingredientes com checkbox interativa: a caixa alinha com a primeira linha
+   (flex + `margin-top`) e o texto riscado marca o ingrediente como feito.
+   Sem JS: o `input` dentro do `label` faz o toggle ao clicar no texto. */
+.ingredients-list li {
+  background: none;
+  padding-left: 0;
+}
+
+.ingredient-check {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  margin-bottom: 0;
+  font-weight: 400;
+  cursor: pointer;
+}
+
+.ingredient-box {
+  appearance: none;
+  -webkit-appearance: none;
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  /* (line-height 31.5px - caixa 20px) / 2: centra a caixa na 1ª linha. */
+  margin: 6px 0 0;
+  padding: 0;
+  display: grid;
+  place-content: center;
+  border: 1.5px solid var(--gold);
+  border-radius: 6px;
+  background: transparent;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.ingredient-box::after {
+  content: "";
+  width: 6px;
+  height: 10px;
+  border-right: 2px solid var(--white);
+  border-bottom: 2px solid var(--white);
+  transform: rotate(45deg) scale(0.5);
+  margin-bottom: 2px;
+  opacity: 0;
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
+}
+
+.ingredient-box:checked {
+  background-color: var(--gold);
+  border-color: var(--gold);
+}
+
+.ingredient-box:checked::after {
+  opacity: 1;
+  transform: rotate(45deg) scale(1);
+}
+
+.ingredient-box:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+
+.ingredient-box:checked ~ .ingredient-text {
+  opacity: 0.55;
+  text-decoration: line-through;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ingredient-box,
+  .ingredient-box::after {
+    transition: none;
+  }
+}
+
+/* Tema escuro (paleta A — quente). A maioria do `culinaria.css` já usa
+   `var(--white-smoke/grey/dark/gold/white)`, por isso a troca das vars acima
+   cobre fundo, texto, headings, cards, header, footer e formulários. Abaixo
+   ficam só os remendos para cores hardcoded no legado. */
+
+html.dark body {
+  background-color: var(--white-smoke);
+  color: var(--grey);
+}
+
+html.dark .white {
+  background-color: var(--white);
+}
+
+html.dark .dark {
+  background-color: #0f0e0d;
+}
+
+html.dark .button.secondary,
+html.dark .button.tertiary {
+  color: var(--dark);
+}
+
+/* Campos: o `.c-input` legado pinta o fundo de branco, o que no tema escuro
+   deixava o texto (claro) e o placeholder sobre branco — 1.2:1 e 1.3:1. Os
+   campos passam a usar a superfície escura dos cards (`--white`). */
+html.dark .c-input {
+  background-color: var(--white);
+  color: var(--dark);
+}
+
+/* A newsletter do footer marca o input com `off-white` para o destacar da
+   banda clara; o `background-color` acima tem mais especificidade e
+   sobrepunha essa tinta, por isso ela volta aqui. */
+html.dark .c-input.off-white {
+  background-color: var(--white-smoke);
+}
+
+html.dark .c-input::placeholder {
+  color: #cdc4b8bf; /* --grey a 75% sobre --white: ~6:1 */
+}
+
+html.dark .form-input.search,
+html.dark .form-input.search-nav {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23cdc4b8' stroke-width='2' stroke-linecap='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cline x1='16.5' y1='16.5' x2='21' y2='21'/%3E%3C/svg%3E");
+}
+
+html.dark .footer-top,
+html.dark .footer-bottom {
+  border-color: #f3ece126;
+}
+
+html.dark .recipe-card:hover {
+  box-shadow: 0 60px 100px #00000080;
+}
+
+html.dark .image,
+html.dark .tall-image {
+  filter: brightness(0.92);
+}
+
+html.dark .social-icon,
+html.dark .recipe-icon {
+  filter: invert(0.85);
+}
+
+html.dark .astro-code {
+  background-color: var(--shiki-dark-bg) !important;
+}
+
+html.dark .astro-code span {
+  color: var(--shiki-dark) !important;
+}
+
+/* Toggle de tema no header. `button.` prefixa a especificidade acima do reset
+   `button, [type="button"]` do tema legado (empate 0,1,0 que o bundle único
+   desfaz pela ordem), por isso a borda sobrevive independentemente da ordem. */
+button.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 62px;
+  height: 32px;
+  margin-left: 0;
+  border: 1px solid #9c702a66;
+  border-radius: 999px;
+  background-color: transparent;
+  color: var(--dark);
+  cursor: pointer;
+  flex-shrink: 0;
+  padding: 0;
+  transition:
+    color 0.3s,
+    border-color 0.3s,
+    background-color 0.3s;
+}
+
+.theme-toggle:hover {
+  border-color: var(--gold);
+}
+
+.theme-toggle:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+
+.theme-toggle .switch-track {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.theme-toggle .knob {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: var(--gold);
+  /* Creme no modo claro: o gold é escuro e o símbolo escuro ficava sem
+     contraste (3.5:1 → 4.1:1). */
+  color: #faf6ee;
+  transition:
+    transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    color 0.3s;
+}
+
+.theme-toggle .knob svg {
+  width: 14px;
+  height: 14px;
+}
+
+.theme-toggle .knob .icon-moon {
+  display: none;
+}
+
+html.dark .theme-toggle .knob {
+  transform: translateX(30px);
+  /* No escuro o gold é claro, por isso a lua volta a ser escura (6.7:1). */
+  color: #1b2629;
+}
+
+html.dark .theme-toggle .knob .icon-sun {
+  display: none;
+}
+
+html.dark .theme-toggle .knob .icon-moon {
+  display: block;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .theme-toggle .knob {
+    transition: none;
+  }
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+  gap: 4px;
+}
+
+.nav.c-nav .nav-actions .theme-toggle {
+  position: relative;
+  z-index: 1001;
+}
+
+@media (min-width: 992px) {
+  .nav.c-nav > .nav-bar > .container > .nav-wrapper {
+    display: contents;
+  }
+
+  .nav.c-nav .nav-menu.c-nav-menu {
+    order: 2;
+    /* Absorve o espaço livre do `space-between`: sem isto o 3º item
+       (`.nav-actions` com o toggle) é empurrado para a ponta direita e
+       abre um buraco entre os ícones sociais e o toggle. */
+    margin-left: auto;
+  }
+
+  .nav.c-nav .nav-actions {
+    order: 3;
+    margin-left: 24px;
+  }
+}
+
+@media (max-width: 991px) {
+  .nav-actions {
+    margin-left: 0;
+  }
+
+  /* Com hamburger visível, o pill só aparece com o drawer aberto
+     (ao lado do X), para não encher a barra. O `display` não anima, por
+     isso a entrada desliza da direita com a mesma curva/duração do
+     drawer (0.6s) em vez de aparecer de rompante. */
+  .nav.c-nav .nav-actions .theme-toggle {
+    display: none;
+  }
+
+  .nav.c-nav.menu-open .nav-actions .theme-toggle {
+    display: inline-flex;
+    animation: theme-toggle-slide-in 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+}
+
+@keyframes theme-toggle-slide-in {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@media (max-width: 991px) and (prefers-reduced-motion: reduce) {
+  .nav.c-nav.menu-open .nav-actions .theme-toggle {
+    animation: none;
+  }
+}
+
+/* Padrões partilhados botão/back-link (RecipeHero, RecipeActions, BackLink).
+   Vivem aqui — e não em `<style scoped>` — porque os SVGs vêm do componente
+   Icon e os spans do BackLink: o scope do Astro não atravessa componentes,
+   por isso regras scoped no pai nunca os alcançariam. */
+.button-wrapper .button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn-icon,
+.back-arrow {
+  width: 1em;
+  height: 1em;
+  flex-shrink: 0;
+}
+
+.back-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  line-height: 1.2;
+}
+
+/* Feedback de toque nos botões e controlos.
+   O tema só define `:hover` — que nunca dispara em ecrãs táteis — e ainda o
+   anula abaixo de 1249px (`.button:hover` repete a cor base). Como o
+   `-webkit-tap-highlight-color` legado é transparente, o toque ficava sem
+   qualquer resposta antes de mudar de página. O `:active` abaixo espelha o
+   `:hover` de desktop para o dedo ter a mesma pista, mais um leve encollher. */
+.button,
+.pagination-button,
+.category-tag,
+.menu-button {
+  touch-action: manipulation;
+}
+
+.button,
+.pagination-button {
+  /* O `transform` entra na transição para o encollher animar em vez de
+     saltar; as cores já transitavam. */
+  transition:
+    color 0.3s,
+    background-color 0.3s,
+    transform 0.15s ease,
+    filter 0.15s ease;
+}
+
+.button:active,
+.pagination-button:active {
+  transform: scale(0.97);
+}
+
+/* Primário: espelha o `:hover` de desktop (fundo transparente, texto escuro). */
+.button:not(.secondary):not(.tertiary):active {
+  color: var(--dark);
+  background-color: transparent;
+}
+
+/* Secundário e paginação: espelham o `:hover` de desktop (fundo ouro). */
+.button.secondary:active,
+.pagination-button:active {
+  background-color: var(--gold);
+  color: var(--white);
+}
+
+.button.tertiary:active {
+  opacity: 0.7;
+}
+
+/* Pills de categoria e cards: sem `:hover` em mobile, por isso o `:active`
+   dá a única pista de que o toque foi registado. */
+.category-tag {
+  transition:
+    transform 0.15s ease,
+    filter 0.15s ease;
+}
+
+.category-tag:active {
+  transform: scale(0.96);
+  filter: brightness(0.92);
+}
+
+.recipe-card {
+  touch-action: manipulation;
+}
+
+.recipe-card:active {
+  transform: scale(0.98);
+  /* O lift de desktop anima em 0.6s — lento demais para um toque; encurta-se
+     só durante a pressão para o encolher ser imediato. */
+  transition-duration: 0.15s;
+}
+
+.button:focus-visible,
+.pagination-button:focus-visible,
+.category-tag:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button,
+  .pagination-button,
+  .category-tag,
+  .recipe-card {
+    transition: none;
+  }
+
+  .button:active,
+  .pagination-button:active,
+  .category-tag:active,
+  .recipe-card:active {
+    transform: none;
+  }
+}

@@ -1,0 +1,41 @@
+---
+import type { PrintSection, StepBlock } from "@/lib/print";
+
+interface Props {
+  ingredients: PrintSection[];
+  steps: StepBlock[];
+}
+
+const { ingredients, steps } = Astro.props;
+---
+
+<div class="cols">
+  <aside class="col left">
+    <h2 class="sec">Ingredientes</h2>
+    {ingredients.map((section) => (
+      <>
+        {section.heading && <div class="grp">{section.heading}</div>}
+        <ul class="check">
+          {section.items.map((item) => (
+            <li>
+              <span class="box"></span>
+              <span>{item}</span>
+            </li>
+          ))}
+        </ul>
+      </>
+    ))}
+  </aside>
+  <div class="col right">
+    <h2 class="sec">Preparação</h2>
+    {steps.map((row) => (
+      <div class="step">
+        <div class="num">{String(row.n).padStart(2, "0")}</div>
+        <div>
+          {row.head && <h4>{row.head}</h4>}
+          <p>{row.text}</p>
+        </div>
+      </div>
+    ))}
+  </div>
+</div>

@@ -1,0 +1,28 @@
+---
+interface Props {
+  fichaNo: string;
+  totalTime: string;
+  title: string;
+  excerpt: string;
+  qrSvg?: string | null;
+}
+
+const { fichaNo, totalTime, title, excerpt, qrSvg } = Astro.props;
+---
+
+<div class="mast">
+  <div class="mast-row">
+    <span>Receita Nº {fichaNo}</span>
+    <span data-total>{totalTime}</span>
+  </div>
+  <div class="mast-main">
+    <h1>{title}</h1>
+    {qrSvg && (
+      <span class="qr qr-mast" title="Aponta para ver a receita online">
+        <Fragment set:html={qrSvg} />
+      </span>
+    )}
+  </div>
+  <p class="standfirst">“{excerpt}”</p>
+  <div class="rule"></div>
+</div>

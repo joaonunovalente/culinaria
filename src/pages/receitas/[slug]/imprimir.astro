@@ -1,0 +1,134 @@
+---
+import Page from "@/layouts/Page.astro";
+import Icon from "@/components/ui/Icon.astro";
+import { siteConfig } from "@/config/site";
+import { getPrintStaticPaths, recipeHref } from "@/lib/recipes";
+import { absoluteUrl } from "@/lib/url";
+import {
+  PRINT_SHORT_URL,
+  buildPrintMetaFields,
+  buildPrintPayload,
+  flattenSteps,
+  formatFichaNo,
+  formatForno,
+  qrSvgFor,
+} from "@/lib/print";
+import "@/styles/print-sheet.css";
+import PrintToolbar from "@/components/print/PrintToolbar.astro";
+import PrintSettings from "@/components/print/PrintSettings.astro";
+import PrintSheetHeader from "@/components/print/PrintSheetHeader.astro";
+import PrintColumns from "@/components/print/PrintColumns.astro";
+import PrintFooter from "@/components/print/PrintFooter.astro";
+
+export const getStaticPaths = getPrintStaticPaths;
+
+const { recipe, index } = Astro.props;
+const fichaNo = formatFichaNo(index);
+const pageTitle = `Imprimir: ${recipe.data.title}`;
+const forno = formatForno(recipe.data.oven, recipe.data.cookTime);
+const canonical = absoluteUrl(recipeHref(recipe));
+const payload = JSON.stringify(buildPrintPayload(recipe, siteConfig.authorName));
+const steps = flattenSteps(recipe.data.directions);
+const backHref = `${recipeHref(recipe)}#recipe`;
+const qrSvg = await qrSvgFor(canonical);
+const metaFields = buildPrintMetaFields(recipe);
+const sheetHeaderProps = {
+  fichaNo,
+  totalTime: recipe.data.totalTime,
+  title: recipe.data.title,
+  excerpt: recipe.data.excerpt,
+  qrSvg,
+  prepTime: recipe.data.prepTime,
+  forno,
+  servings: recipe.data.servings,
+  servingsUnit: recipe.data.servingsUnit,
+  difficulty: recipe.data.difficulty,
+  cover: recipe.data.cover,
+  coverAlt: recipe.data.coverAlt,
+  authorName: siteConfig.authorName,
+};
+---
+
+<Page
+  title={pageTitle}
+  description={recipe.data.excerpt}
+  image={recipe.data.cover}
+  type="article"
+  noindex={true}
+  mainClass="print-page"
+>
+  <PrintToolbar backHref={backHref} recipeTitle={recipe.data.title} />
+
+  <div class="print-layout" id="print-layout">
+    <PrintSettings metaFields={metaFields} />
+
+    <div class="print-stage">
+      <div id="fit-viewport">
+        <div id="fit">
+          <div id="sheets" aria-busy="true"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="print-fabs" id="print-fabs">
+    <button
+      class="print-settings-fab"
+      id="print-settings-fab"
+      type="button"
+      aria-expanded="false"
+      aria-controls="print-settings-panel"
+      aria-label="Abrir configurações"
+      hidden
+    >
+      <Icon name="sliders" />
+      <span>Configurações</span>
+    </button>
+    <button
+      class="print-print-fab"
+      id="print-action-mobile"
+      type="button"
+      aria-label="Imprimir receita"
+      hidden
+    >
+      <Icon name="print" />
+      <span>Imprimir</span>
+    </button>
+  </div>
+  <div class="print-scrim" id="print-scrim" aria-hidden="true"></div>
+
+  <template id="tpl-top">
+    <PrintSheetHeader {...sheetHeaderProps} />
+  </template>
+
+  <script type="application/json" id="recipe-data" set:html={payload} />
+  <noscript>
+    <style>
+      #sheets,
+      .print-pagehead,
+      .print-sidebar {
+        display: none;
+      }
+      #fit-viewport,
+      #fit {
+        width: 100%;
+      }
+      .sheet {
+        width: 100%;
+      }
+      .cols {
+        grid-template-columns: 1fr;
+      }
+      .col.left {
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+    </style>
+    <div class="sheet flow">
+      <PrintSheetHeader {...sheetHeaderProps} />
+      <PrintColumns ingredients={recipe.data.ingredients} steps={steps} />
+      <PrintFooter left={PRINT_SHORT_URL} right={`${siteConfig.name} · Folha A4`} />
+    </div>
+  </noscript>
+
+  <script src="../../../scripts/print-paginator.ts"></script>
+</Page>

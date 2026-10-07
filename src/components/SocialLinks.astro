@@ -1,0 +1,31 @@
+---
+/**
+ * Social icon row, shared by the header and footer.
+ * Links and icon paths come from the `socials` export in @/config/site.
+ */
+
+import { socials } from "@/config/site";
+
+interface Props {
+  /** Footer variant adds the align-left class. */
+  alignLeft?: boolean;
+}
+
+const { alignLeft = false } = Astro.props;
+---
+
+<div class:list={["social-links-wrapper", alignLeft && "align-left"]}>
+  {socials.map(({ label, href, icon }) => {
+    const external = !href.startsWith("/");
+    return (
+      <a
+        href={href}
+        target={external ? "_blank" : undefined}
+        rel={external ? "noopener noreferrer" : undefined}
+        class="social-link c-inline-block"
+      >
+        <img src={icon} loading="lazy" alt={`Ícone do ${label}`} class="social-icon" />
+      </a>
+    );
+  })}
+</div>

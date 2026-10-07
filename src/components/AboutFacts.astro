@@ -1,0 +1,30 @@
+---
+/**
+ * About page facts grid: heading plus exactly three cards.
+ * Heading and cards come from the `about` export in @/config/about
+ * (`factsHeading` and the three-entry `facts` tuple).
+ * Markup follows the original template classes.
+ */
+
+import { about } from "@/config/about";
+---
+
+<section class="section double-bottom">
+  <div class="container">
+    <div class="heading-wrapper fade-up">
+      <h2 class="heading xl">{about.factsHeading}</h2>
+    </div>
+    <div class="_12-columns align-top">
+      {about.facts.map((fact) => (
+        <div class="column desktop-4 tablet-6 mobile-12 fade-up">
+          <div class="image-wrapper">
+            <img src={fact.image} loading="lazy" alt={fact.imageAlt} class="image" />
+          </div>
+          <div class="spacer _24"></div>
+          <h3 class="heading m">{fact.title}</h3>
+          <p>{fact.text}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

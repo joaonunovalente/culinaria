@@ -1,0 +1,29 @@
+---
+/**
+ * Legacy YouTube embed. The video id is fixed (single legacy video);
+ * pass `enabled=false` to render the invisible placeholder the theme expects.
+ */
+interface Props {
+  enabled: boolean;
+}
+
+const { enabled } = Astro.props;
+---
+
+{enabled ? (
+  <div id="video" style="padding-top:56.20608899297424%" class="recipe-video c-video c-embed">
+    <iframe
+      class="embedly-embed"
+      src="https://cdn.embedly.com/widgets/media.html?src=https%3A%2F%2Fwww.youtube.com%2Fembed%2FViwGpHRSVyE%3Fstart%3D257%26feature%3Doembed%26start%3D257&display_name=YouTube&url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DViwGpHRSVyE&image=https%3A%2F%2Fi.ytimg.com%2Fvi%2FViwGpHRSVyE%2Fhqdefault.jpg&args=start%3D257&key=96f1f04c5f4143bcb0f2e68c87d65feb&type=text%2Fhtml&schema=youtube"
+      width="854"
+      height="480"
+      scrolling="no"
+      title="Vídeo do YouTube"
+      frameborder="0"
+      allow="autoplay; fullscreen"
+      allowfullscreen="true"
+    />
+  </div>
+) : (
+  <div id="video" class="recipe-video c-condition-invisible c-dyn-bind-empty c-video c-embed" />
+)}

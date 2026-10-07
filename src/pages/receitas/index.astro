@@ -1,0 +1,62 @@
+---
+import { getCollection } from "astro:content";
+import Page from "@/layouts/Page.astro";
+import RecipeCard from "@/components/RecipeCard.astro";
+import CategoryList from "@/components/CategoryList.astro";
+import { RECIPES_BATCH, RECIPES_BATCH_STEP, getListedRecipes } from "@/lib/recipes";
+
+/**
+ * The whole listing lives on this one page: it grows with "Mais receitas"
+ * instead of /receitas/2/, /3/... files that each needed writing by hand.
+ * Every card is in the HTML — the script marks the ones past the first batch
+ * `is-overflow` and the CSS hides them, so no-JS visitors (and crawlers) still
+ * see the full list.
+ */
+
+const listed = getListedRecipes(await getCollection("recipes"));
+---
+
+<Page title="Todas as receitas" description="Vê todas as receitas da Culinária.">
+  <section class="section">
+    <div class="container">
+      <div class="_12-columns fade-up">
+        <div class="column desktop-6 tablet-12">
+          <div class="text-center">
+            <h1 class="heading xxl">Todas as receitas</h1>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="section double-bottom no-top-padding">
+    <div class="container">
+      <CategoryList fadeUp />
+      <div class="c-dyn-list">
+        <div id="recipe-list" role="list" class="recipe-card-list c-dyn-items">
+          {listed.map((recipe, index) => (
+            <div
+              role="listitem"
+              class:list={["fade-up", "c-dyn-item", index >= RECIPES_BATCH && "is-overflow"]}
+            >
+              <RecipeCard recipe={recipe} eager={index < 3} />
+            </div>
+          ))}
+        </div>
+        <div class="button-wrapper centered fade-up mobile-full">
+          <button
+            type="button"
+            class="load-more button secondary c-button"
+            data-load-more
+            data-step={RECIPES_BATCH_STEP}
+            hidden
+          >
+            Mais receitas
+          </button>
+        </div>
+        <p class="sr-only" role="status" data-load-more-status></p>
+      </div>
+    </div>
+  </section>
+
+  <script src="../../scripts/load-more.ts"></script>
+</Page>

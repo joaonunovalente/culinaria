@@ -1,0 +1,43 @@
+---
+import RecipeCard from "@/components/RecipeCard.astro";
+import { about } from "@/config/about";
+import type { Recipe } from "@/lib/recipes";
+
+interface Props {
+  related: Recipe[];
+}
+
+const { related } = Astro.props;
+---
+
+<div class="recipe-sidebar">
+  <div class="recipe-about-wrapper">
+    <div class="tall-image-wrapper">
+      <img
+        src="/images/about-photo.jpg"
+        loading="lazy"
+        alt="Cozinhar na cozinha junto ao fogão"
+        class="tall-image"
+      />
+    </div>
+    <div class="text-center">
+      <h3 class="heading s">Sobre mim</h3>
+    </div>
+    <p>{about.intro}</p>
+  </div>
+  <div class="other-recipes-wrapper">
+    <div class="text-center">
+      <h2 class="heading m">Outras receitas</h2>
+    </div>
+    <div class="spacer _8"></div>
+    <div class="c-dyn-list">
+      <div role="list" class="recipe-card-list vertical c-dyn-items">
+        {related.map((item) => (
+          <div role="listitem" class="c-dyn-item">
+            <RecipeCard recipe={item} variant="small" />
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</div>

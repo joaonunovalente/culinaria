@@ -1,0 +1,29 @@
+---
+import CoverImage from "@/components/ui/CoverImage.astro";
+import { recipeHref, type Recipe } from "@/lib/recipes";
+
+interface Props {
+  recipe: Recipe;
+}
+
+const { recipe } = Astro.props;
+const href = recipeHref(recipe);
+---
+
+<div class="_12-columns space-between feature-row fade-up c-dyn-item" role="listitem">
+  <div class="column desktop-7 tablet-12">
+    <a href={href} class="image-wrapper c-inline-block feature-image">
+      <CoverImage src={recipe.data.cover} alt={recipe.data.coverAlt} eager />
+      <div class="featured-recipe-tag">Receita em destaque</div>
+    </a>
+  </div>
+  <div class="column desktop-4 tablet-12">
+    <h2 class="heading xl">{recipe.data.title}</h2>
+    <p>{recipe.data.excerpt}</p>
+    <div class="button-wrapper mobile-full">
+      <a href={href} class="button secondary c-button">
+        Ver receita
+      </a>
+    </div>
+  </div>
+</div>

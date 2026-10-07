@@ -1,0 +1,38 @@
+---
+import Page from "@/layouts/Page.astro";
+import SearchForm from "@/components/search/SearchForm.astro";
+import { siteConfig } from "@/config/site";
+---
+
+<Page
+  title="Pesquisar receitas"
+  description={`Pesquise todas as receitas publicadas na ${siteConfig.name}.`}
+  noindex
+>
+  <section class="section">
+    <div class="container">
+      <div class="_12-columns">
+        <div class="column desktop-6 tablet-12">
+          <div class="text-center fade-up">
+            <h1 class="heading xxl">Pesquisar receitas</h1>
+            <SearchForm
+              id="search-page"
+              variant="page"
+              placeholder="Pesquisar receitas..."
+              autocompleteOff
+            />
+            <p class="search-summary" data-search-page-summary></p>
+          </div>
+        </div>
+      </div>
+      <div class="c-dyn-list">
+        <div role="list" class="recipe-card-list c-dyn-items" data-search-page-results></div>
+      </div>
+      <noscript>
+        <p class="search-summary">A pesquisa precisa de JavaScript para mostrar resultados.</p>
+      </noscript>
+    </div>
+  </section>
+
+  <script src="../scripts/search-page.ts"></script>
+</Page>

@@ -1,0 +1,23 @@
+---
+/**
+ * About page quote band. Text comes from `about.quote` in @/config/about.
+ * Visibility is controlled at the call site (`about.quote.enabled` in
+ * src/pages/sobre.astro); this component always renders its markup.
+ * Markup follows the original template classes.
+ */
+
+import { about } from "@/config/about";
+---
+
+<section class="section double-bottom no-top-padding">
+  <div class="container">
+    <div class="_12-columns">
+      <div class="column desktop-10 tablet-12">
+        <div class="text-center fade-up">
+          <img src="/icons/quote-mark.svg" loading="lazy" alt="" class="quote-mark" />
+          <p class="heading l">{about.quote.text}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

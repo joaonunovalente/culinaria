@@ -1,0 +1,66 @@
+---
+import { siteConfig } from "@/config/site";
+import { getHeaderNavigation, isCurrentPath } from "@/lib/navigation";
+import ThemeToggle from "@/components/ThemeToggle.astro";
+import SearchForm from "@/components/search/SearchForm.astro";
+
+const currentPath = Astro.url.pathname;
+const isCurrent = (href: string) => isCurrentPath(currentPath, href);
+const navigation = getHeaderNavigation();
+---
+
+<div
+  data-collapse="medium"
+
+  role="banner"
+  class="nav c-nav"
+>
+  <div class="nav-bar">
+    <div class="container">
+      <div class="nav-wrapper">
+        <div class="nav-left">
+          <a
+            href="/"
+            aria-current={isCurrent("/") ? "page" : undefined}
+            class:list={["brand c-nav-brand", isCurrent("/") && "c--current"]}
+          >
+            <span class="wordmark">{siteConfig.name}</span>
+          </a>
+          <SearchForm id="search-nav" variant="nav" />
+        </div>
+        <div class="nav-actions">
+          <ThemeToggle />
+          <div
+            class="menu-button c-nav-button"
+            role="button"
+            tabindex="0"
+            aria-label="Alternar menu de navegação"
+            aria-expanded="false"
+            aria-controls="primary-navigation"
+          >
+            <div class="hamburger-line"></div>
+            <div class="hamburger-line middle"></div>
+            <div class="hamburger-line bottom"></div>
+          </div>
+        </div>
+      </div>
+      <nav role="navigation" id="primary-navigation" class="nav-menu c-nav-menu">
+        <SearchForm id="search-menu" variant="drawer" />
+        {navigation.map((item) => {
+          const current = isCurrent(item.href);
+          return (
+            <a
+              href={item.href}
+              aria-current={current ? "page" : undefined}
+              class:list={["nav-link c-inline-block", current && "c--current"]}
+            >
+              <div class="nav-link-text">{item.label}</div>
+              <div class="nav-underline" />
+            </a>
+          );
+        })}
+      </nav>
+    </div>
+  </div>
+  <div class="menu-overlay"></div>
+</div>

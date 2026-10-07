@@ -1,0 +1,57 @@
+---
+/**
+ * Middle of the footer: brand, description and social row on the left, the
+ * public link and category columns on the right. Both columns come from the
+ * `footer` export in @/config/site (the category links are derived from
+ * @/config/categories), and the current page is marked with aria-current.
+ */
+
+import SocialLinks from "@/components/SocialLinks.astro";
+import { footer, siteConfig } from "@/config/site";
+import { getFooterNavigation, isCurrentPath } from "@/lib/navigation";
+
+const currentPath = Astro.url.pathname;
+const isHome = currentPath === "/";
+const isCurrent = (href: string) => isCurrentPath(currentPath, href);
+const exploreLinks = getFooterNavigation();
+---
+
+<div class="footer-middle">
+  <div class="container">
+    <div class="footer-middle-wrapper">
+      <div class="footer-text-wrapper">
+        <div class="footer-text-wrapper">
+          <a
+            href="/"
+            aria-current={isHome ? "page" : undefined}
+            class:list={["brand footer c-nav-brand", isHome && "c--current"]}
+          >
+            <span class="wordmark">{siteConfig.name}</span>
+          </a>
+          <p class="paragraph smalll">{siteConfig.description}</p>
+        </div>
+        <SocialLinks alignLeft />
+      </div>
+      <div class="footer-link-wrapper">
+        <div class="footer-subhead">{footer.navigation.title}</div>
+        <div class="footer-rule"></div>
+        {exploreLinks.map(({ label, href }) => (
+          <a href={href} aria-current={isCurrent(href) ? "page" : undefined} class="footer-link">
+            {label}
+          </a>
+        ))}
+      </div>
+      <div class="footer-link-wrapper">
+        <div class="footer-subhead">{footer.categoryNavigation.title}</div>
+        <div class="footer-rule"></div>
+        <div class:list={[footer.categoryNavigation.columns && "footer-link-columns"]}>
+          {footer.categoryNavigation.links.map(({ label, href }) => (
+            <a href={href} aria-current={isCurrent(href) ? "page" : undefined} class="footer-link">
+              {label}
+            </a>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

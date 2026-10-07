@@ -1,0 +1,16 @@
+---
+/**
+ * Backwards-compatible hero search. New code should use
+ * `components/search/SearchForm.astro` directly (variants: nav/drawer/hero/page).
+ */
+import SearchForm from "@/components/search/SearchForm.astro";
+
+interface Props {
+  id: string;
+  placeholder?: string;
+}
+
+const { id, placeholder = "Pesquisar" } = Astro.props;
+---
+
+<SearchForm id={id} placeholder={placeholder} variant="hero" />

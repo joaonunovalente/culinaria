@@ -1,0 +1,56 @@
+---
+/**
+ * Single search form used in the header bar, the mobile drawer,
+ * the homepage hero and the search page. One markup, four placements.
+ */
+
+interface Props {
+  /** Unique input id (the header renders two instances). */
+  id: string;
+  placeholder?: string;
+  variant?: "nav" | "drawer" | "hero" | "page";
+  value?: string;
+  autocompleteOff?: boolean;
+}
+
+const {
+  id,
+  placeholder = "Pesquisar",
+  variant = "hero",
+  value,
+  autocompleteOff = false,
+} = Astro.props;
+
+const formClass =
+  variant === "nav"
+    ? "search-nav search-bar c-form"
+    : variant === "drawer"
+      ? "search-drawer c-form"
+      : "search c-form";
+const inputClass =
+  variant === "hero" || variant === "page"
+    ? "form-input search c-input"
+    : "form-input search-nav c-input";
+---
+
+<form action="/pesquisar/" method="get" class={formClass} role="search">
+  <input
+    class={inputClass}
+    maxlength="256"
+    name="query"
+    placeholder={placeholder}
+    aria-label="Pesquisar receitas"
+    type="search"
+    id={id}
+    required={variant !== "page"}
+    value={value}
+    autocomplete={autocompleteOff ? "off" : undefined}
+    data-search-page-input={variant === "page" ? "" : undefined}
+  />
+  <input
+    type="submit"
+    class="search-button c-button"
+    value="Pesquisar"
+    tabindex={variant === "nav" || variant === "drawer" ? "-1" : undefined}
+  />
+</form>

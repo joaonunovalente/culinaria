@@ -1,0 +1,22 @@
+---
+/**
+ * About page hero: centered title and intro paragraph.
+ * Copy comes from the `about` export in @/config/about.
+ * Markup follows the original template classes.
+ */
+
+import { about } from "@/config/about";
+---
+
+<section class="section">
+  <div class="container">
+    <div class="_12-columns fade-up">
+      <div class="column desktop-6 tablet-12">
+        <div class="text-center">
+          <h1 class="heading xxl">{about.heading}</h1>
+          <p>{about.intro}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,119 @@
+---
+/**
+ * Newsletter signup form, used on the homepage and in the footer. The footer
+ * variant is narrower, so it drops the name field and tints the email input.
+ *
+ * A honeypot field (name from `newsletter.honeypotFieldName`) is rendered
+ * off-screen; the script drops any submission that fills it in.
+ *
+ * Every provider setting and the field names come from the `newsletter`
+ * export in @/config/newsletter. Submit handling is driven by one derived
+ * mode, published to the script on the form as `data-submit`:
+ *
+ * - "demo"   - `newsletter.action` is empty. The script in
+ *              /scripts/culinaria.js intercepts the submit and shows the inline
+ *              success state. Nothing is actually sent anywhere.
+ * - "native" - the browser posts to the action and the provider shows its own
+ *              confirmation page. The script leaves the form alone.
+ * - "ajax"   - the script fetches the action and shows the inline success
+ *              panel, so the visitor stays on the page. Needs a provider that
+ *              sends CORS headers.
+ */
+
+import { newsletter } from "@/config/newsletter";
+
+interface Props {
+  /**
+   * Unique name for this instance, used to build the input ids that the
+   * visually hidden labels point at. Required, because the homepage renders
+   * both the body and the footer form and duplicate ids would break the
+   * label/input association.
+   */
+  id: string;
+  /** Render the name field. The footer signup only asks for an email. */
+  showName?: boolean;
+  /** Extra class on the email input, e.g. "off-white" on the footer's white band. */
+  inputClass?: string;
+  /** Wrap in .form-block, which sizes the form to its column. Off in the footer. */
+  block?: boolean;
+}
+
+const { id, showName = true, inputClass, block = true } = Astro.props;
+
+// An empty action means demo mode regardless of submitMode, so the two config
+// fields can never disagree about what the form will do.
+const submitMode = !newsletter.action ? "demo" : newsletter.submitMode;
+
+const nameId = `newsletter-${id}-name`;
+const emailId = `newsletter-${id}-email`;
+
+// An empty nameFieldName drops the field, so the form never collects a name
+// the provider will silently discard.
+const withName = showName && Boolean(newsletter.nameFieldName);
+const honeypot = newsletter.honeypotFieldName;
+---
+
+<div class:list={[block && "form-block", "c-form"]}>
+  <form
+    method={newsletter.method}
+    action={newsletter.action}
+    data-submit={submitMode}
+    data-success-url={newsletter.successUrl || undefined}
+    class="form horizontal"
+  >
+    {honeypot && (
+      // Kept in the markup but pushed off-screen and out of the tab order:
+      // bots fill it, people never reach it. Not `type="hidden"`, because
+      // most bots skip those. aria-hidden pairs with tabindex="-1" so screen
+      // readers do not announce a field no human can use.
+      <div class="form-hp" aria-hidden="true">
+        <label for={`${honeypot}-${id}`}>Deixa este campo vazio</label>
+        <input
+          autocomplete="off"
+          id={`${honeypot}-${id}`}
+          name={honeypot}
+          tabindex="-1"
+          type="text"
+        />
+      </div>
+    )}
+    {Object.entries(newsletter.extraFields).map(([name, value]) => (
+      <input type="hidden" name={name} value={value} />
+    ))}
+    {withName && (
+      <>
+        <label class="sr-only" for={nameId}>
+          Nome
+        </label>
+        <input
+          class="form-input c-input"
+          id={nameId}
+          maxlength="256"
+          name={newsletter.nameFieldName}
+          placeholder="Nome"
+          type="text"
+          required
+        />
+      </>
+    )}
+    <label class="sr-only" for={emailId}>
+      Endereço de e-mail
+    </label>
+    <input
+      class:list={["form-input", inputClass, "c-input"]}
+      id={emailId}
+      maxlength="256"
+      name={newsletter.emailFieldName}
+      placeholder="Endereço de e-mail"
+      type="email"
+      required
+    />
+    <input type="submit" data-wait="Aguarda..." class="button c-button" value="Subscrever" />
+  </form>
+  <div class="form-success c-form-done">
+    <div>Obrigado! Já estás na minha newsletter semanal!</div>
+  </div>
+  <div class="form-error c-form-fail">
+    <div>Ups! Algo correu mal ao enviar o formulário.</div>
+  </div>
+</div>

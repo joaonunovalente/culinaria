@@ -1,0 +1,52 @@
+---
+/**
+ * Print sheet header: masthead + metabar + cover. Grouped because the
+ * paginator clones them together into `#tpl-top` (and the `<noscript>`
+ * fallback renders the same block server-side).
+ */
+import PrintMast from "@/components/print/PrintMast.astro";
+import PrintMetabar from "@/components/print/PrintMetabar.astro";
+import PrintCover from "@/components/print/PrintCover.astro";
+
+interface Props {
+  fichaNo: string;
+  totalTime: string;
+  title: string;
+  excerpt: string;
+  qrSvg?: string | null;
+  prepTime?: string | null;
+  forno?: string | null;
+  servings?: string | null;
+  servingsUnit?: string | null;
+  difficulty?: string | null;
+  cover: string;
+  coverAlt: string;
+  authorName: string;
+}
+
+const {
+  fichaNo,
+  totalTime,
+  title,
+  excerpt,
+  qrSvg,
+  prepTime,
+  forno,
+  servings,
+  servingsUnit,
+  difficulty,
+  cover,
+  coverAlt,
+  authorName,
+} = Astro.props;
+---
+
+<PrintMast fichaNo={fichaNo} totalTime={totalTime} title={title} excerpt={excerpt} qrSvg={qrSvg} />
+<PrintMetabar
+  prepTime={prepTime}
+  forno={forno}
+  servings={servings}
+  servingsUnit={servingsUnit}
+  difficulty={difficulty}
+/>
+<PrintCover cover={cover} coverAlt={coverAlt} authorName={authorName} />

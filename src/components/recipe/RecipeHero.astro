@@ -1,0 +1,98 @@
+---
+import CategoryTag from "@/components/CategoryTag.astro";
+import BackLink from "@/components/ui/BackLink.astro";
+import Icon from "@/components/ui/Icon.astro";
+import { printRecipeHref, type Recipe } from "@/lib/recipes";
+
+interface Props {
+  recipe: Recipe;
+}
+
+const { recipe } = Astro.props;
+---
+
+<div class="_12-columns">
+  <div class="column desktop-6 tablet-12">
+    <div class="recipe-top-row fade-up">
+      <div class="c-dyn-list">
+        <div role="list" class="c-dyn-items">
+          <div role="listitem" class="category-item c-dyn-item">
+            <CategoryTag category={recipe.data.category} />
+          </div>
+        </div>
+      </div>
+      <BackLink href="/receitas/" label="Todas as receitas" />
+    </div>
+    <div class="spacer _24"></div>
+    <h1 class="heading xxl">{recipe.data.title}</h1>
+    <p>{recipe.data.excerpt}</p>
+    <div class="button-wrapper">
+      <a href="#recipe" class="button secondary c-button">
+        <Icon name="down" />
+        Ir para a receita
+      </a>
+      <a
+        href={printRecipeHref(recipe)}
+        class="button c-button"
+        target="_blank"
+        rel="noopener"
+        aria-label="Imprimir (abre numa nova janela)"
+      >
+        <Icon name="print" />
+        Imprimir
+      </a>
+    </div>
+  </div>
+  <div class="column desktop-1 tablet-0">
+    <div class="recipe-divider-wrapper">
+      <div class="recipe-info-divider"></div>
+    </div>
+  </div>
+  <div class="column desktop-2 tablet-12">
+    <div class="recipe-info">
+      {recipe.data.prepTime && (
+        <div class="recipe-info-item">
+          <img src="/icons/icon-prep-time.svg" loading="lazy" alt="" class="recipe-icon" />
+          <div>
+            <div class="recipe-info-subhead">Preparação</div>
+            <div class="recipe-time">{recipe.data.prepTime}</div>
+          </div>
+        </div>
+      )}
+      {recipe.data.cookTime && (
+        <div class="recipe-info-item">
+          <img src="/icons/icon-cook-time.svg" loading="lazy" alt="" class="recipe-icon" />
+          <div>
+            <div class="recipe-info-subhead">Cozimento</div>
+            <div class="recipe-time">{recipe.data.cookTime}</div>
+          </div>
+        </div>
+      )}
+      {recipe.data.servings && (
+        <div class="recipe-info-item">
+          <img src="/icons/icon-servings.svg" loading="lazy" alt="" class="recipe-icon" />
+          <div>
+            <div class="recipe-info-subhead">Doses</div>
+            <div class="servings-wrapper">
+              <div class="recipe-time">{recipe.data.servings}</div>
+              <div class="recipe-time">{recipe.data.servingsUnit ?? "pessoas"}</div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  </div>
+</div>
+
+<style>
+  .recipe-top-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .recipe-top-row .back-button {
+    margin-right: -8px;
+    flex-shrink: 0;
+  }
+</style>

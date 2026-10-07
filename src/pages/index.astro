@@ -1,0 +1,137 @@
+---
+import { getCollection } from "astro:content";
+import Page from "@/layouts/Page.astro";
+import RecipeCard from "@/components/RecipeCard.astro";
+import CategoryList from "@/components/CategoryList.astro";
+import SearchForm from "@/components/search/SearchForm.astro";
+import NewsletterSignup from "@/components/NewsletterSignup.astro";
+import FeaturedIn from "@/components/FeaturedIn.astro";
+import FeaturedRecipe from "@/components/recipe/FeaturedRecipe.astro";
+import { featuredIn, siteConfig } from "@/config/site";
+import { newsletter } from "@/config/newsletter";
+import { home } from "@/config/home";
+import { getFeatured, getListedRecipes, visibleRecipes } from "@/lib/recipes";
+
+const allRecipes = visibleRecipes(await getCollection("recipes"));
+const featured = getFeatured(allRecipes, 1)[0] ?? allRecipes[0];
+const latest = getListedRecipes(allRecipes).slice(0, 3);
+
+// Whichever block closes the page carries the extra bottom padding, so the
+// spacing holds whether the press-logo row is switched on or off.
+const aboutSectionClass = featuredIn.enabled ? "section" : "section double-bottom";
+---
+
+<Page>
+  <section class="section">
+    <div class="container fade-up">
+      <div class="_12-columns">
+        <div class="column desktop-6 tablet-12">
+          <div class="text-center">
+            <h1 class="heading xxl">{siteConfig.tagline}</h1>
+          </div>
+          <div class="spacer _24"></div>
+          <SearchForm id="search-home" variant="hero" />
+        </div>
+      </div>
+      <CategoryList />
+    </div>
+  </section>
+
+  {featured && (
+    <section class="section no-top-padding">
+      <div class="container">
+        <div class="c-dyn-list">
+          <div role="list" class="c-dyn-items">
+            <FeaturedRecipe recipe={featured} />
+          </div>
+        </div>
+      </div>
+    </section>
+  )}
+
+  <section class="section">
+    <div class="container">
+      <div class="heading-wrapper fade-up">
+        <h2 class="heading xl">Últimas receitas</h2>
+      </div>
+      <div class="c-dyn-list">
+        <div role="list" class="recipe-card-list c-dyn-items">
+          {latest.map((recipe, index) => (
+            <div role="listitem" class="fade-up c-dyn-item">
+              <RecipeCard recipe={recipe} eager={index === 0} />
+            </div>
+          ))}
+        </div>
+      </div>
+      <div class="button-wrapper centered fade-up mobile-full">
+        <a href="/receitas/" class="button secondary c-button">
+          Ver todas as receitas
+        </a>
+      </div>
+    </div>
+  </section>
+
+  {newsletter.enabled && newsletter.showInBody && (
+    <section class="section">
+      <div class="container">
+        <div class="_12-columns fade-up">
+          <div class="column desktop-8 tablet-12">
+            <div class="heading-wrapper centered">
+              <h2 class="heading l">{newsletter.bodyHeading}</h2>
+              <p>{newsletter.bodyText}</p>
+            </div>
+            <div class="spacer _24"></div>
+            <NewsletterSignup id="body" />
+          </div>
+        </div>
+      </div>
+    </section>
+  )}
+
+  {home.about.enabled && (
+    <section class={aboutSectionClass}>
+      <div class="container">
+        <div class="_12-columns space-between mobile-reverse feature-row">
+          <div class="column desktop-5 tablet-12 about-teaser-text">
+            <h2 class="heading xl">{home.about.heading}</h2>
+            {home.about.text.map((paragraph) => (
+              <p>{paragraph}</p>
+            ))}
+            {(home.about.buttonLabel || home.about.secondaryButtonLabel) && (
+              <div class="button-wrapper">
+                {home.about.buttonLabel && (
+                  <a href={home.about.buttonHref} class="button c-button">
+                    {home.about.buttonLabel}
+                  </a>
+                )}
+                {home.about.secondaryButtonLabel && (
+                  <a href={home.about.secondaryButtonHref} class="button secondary c-button">
+                    {home.about.secondaryButtonLabel}
+                  </a>
+                )}
+              </div>
+            )}
+          </div>
+          <div class="column desktop-6 tablet-12 fade-up">
+            <div class="tall-image-wrapper feature-image">
+              <img
+                src={home.about.image}
+                loading="lazy"
+                alt={home.about.imageAlt}
+                class="tall-image"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  )}
+
+  {featuredIn.enabled && (
+    <section class="section no-top-padding double-bottom">
+      <div class="container">
+        <FeaturedIn />
+      </div>
+    </section>
+  )}
+</Page>

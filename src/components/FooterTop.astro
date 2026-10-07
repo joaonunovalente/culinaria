@@ -1,0 +1,24 @@
+---
+/**
+ * Top of the footer: newsletter call to action. The signup reuses
+ * NewsletterSignup in its compact variant, with no name field and the light
+ * input tint that reads against the footer's white background. The heading
+ * comes from `newsletter.footerHeading`, separate from the homepage heading.
+ */
+
+import NewsletterSignup from "@/components/NewsletterSignup.astro";
+import { newsletter } from "@/config/newsletter";
+---
+
+<div class="footer-top">
+  <div class="container">
+    <div class="_12-columns space-between">
+      <div class="column desktop-6 tablet-12">
+        <h2 class="heading m">{newsletter.footerHeading}</h2>
+      </div>
+      <div class="column desktop-5 tablet-12">
+        <NewsletterSignup id="footer" block={false} showName={false} inputClass="off-white" />
+      </div>
+    </div>
+  </div>
+</div>
