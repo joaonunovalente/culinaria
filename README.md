@@ -1,33 +1,16 @@
-<div align="center">
-  <img src="preview.webp" alt="Culinária - Pré-visualização" width="700" />
-
-# 🍽️ Culinária
-
-[![Astro](https://img.shields.io/badge/Astro-7.1.3-FF5D01?style=for-the-badge&logo=astro&logoColor=white)](https://astro.build/)
-
-**Um blog de receitas simples.**
-</div>
-
----
+# Culinária
 
 ## Sobre
 
-**Culinária** é um blog pessoal de receitas criado por [João Nuno Valente](https://github.com/joaonunovalente). Aqui encontras receitas de pratos que eu fiz, com ingredientes de qualidade e passos claros — feito para quem gosta de cozinhar sem complicações.
+**Culinária** é um caderno de receitas criado por [João Nuno Valente](https://github.com/joaonunovalente).
 
----
-
-## Tecnologias
-
-- [Astro](https://astro.build/) — Framework moderno para sites rápidos
-
----
 
 ## Como correr localmente
 
 ### Pré-requisitos
 
 - [Node.js](https://nodejs.org/) >= 22.12.0
-- [npm](https://www.npmjs.com/) (vem incluído no Node)
+- [npm](https://www.npmjs.com/)
 
 ### Instalação
 
@@ -72,8 +55,6 @@ culinaria/
 └── package.json     # Dependências e scripts
 ```
 
----
-
 ## Autor
 
-Mantido por **[João Nuno Valente](https://joaonunovalente.com)**.
+**[João Nuno Valente](https://joaonunovalente.com)**.

@@ -2,8 +2,8 @@ import { categories, categorySlug } from "@/config/categories";
 
 export const siteConfig = {
   name: "Culinária",
-  tagline: "Blog de receitas de João Nuno Valente",
-  title: "Culinária | Blog de receitas de João Nuno Valente",
+  tagline: "Caderno de receitas de João Nuno Valente",
+  title: "Culinária | Caderno de receitas de João Nuno Valente",
   description: "Culinária é o caderno de receitas de João Nuno Valente, com receitas simples do dia-a-dia e algumas sobremesas.",
   siteUrl: "https://culinaria.joaonunovalente.com",
   authorName: "João Nuno Valente",

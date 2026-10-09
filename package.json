@@ -1,6 +1,6 @@
 {
   "name": "culinaria",
-  "description": "Culinária é um blog de receitas de João Nuno Valente.",
+  "description": "Culinária é um blogue de receitas de João Nuno Valente.",
   "type": "module",
   "version": "1.0.0",
   "author": "João Nuno Valente",
@@ -13,7 +13,6 @@
     "url": "https://github.com/joaonunovalente/culinaria/issues"
   },
   "keywords": [
-    "astro-theme",
     "astro",
     "recipes",
     "food-blog"
