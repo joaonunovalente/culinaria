@@ -25,16 +25,32 @@ import { contact } from "@/config/contact";
 // An empty action means demo mode regardless of submitMode, so the two config
 // fields can never disagree about what the form will do.
 const submitMode = !contact.action ? "demo" : contact.submitMode;
+
+// The intro keeps the address as a {{siteConfig.email}} placeholder so the
+// config stays a plain string. Here it is split into segments so the page can
+// render a mailto link in its place, and resolved for the meta description.
+const EMAIL_PLACEHOLDER = "{{siteConfig.email}}";
+const introParts = contact.intro.split(EMAIL_PLACEHOLDER);
+const introDescription = contact.intro.replaceAll(EMAIL_PLACEHOLDER, siteConfig.email);
 ---
 
-<Page title={contact.heading} description={contact.intro}>
+<Page title={contact.heading} description={introDescription}>
   <section class="section">
     <div class="container">
       <div class="_12-columns">
         <div class="column desktop-6 tablet-12 fade-up">
           <div class="text-center">
             <h1 class="heading xxl">{contact.heading}</h1>
-            <p>{contact.intro}</p>
+            <p>
+              {introParts.map((part, index) => (
+                <>
+                  {part}
+                  {index < introParts.length - 1 && (
+                    <a href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a>
+                  )}
+                </>
+              ))}
+            </p>
           </div>
         </div>
       </div>

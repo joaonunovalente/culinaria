@@ -8,7 +8,7 @@ export const contact = {
   // render.
   heading: "Contacto",
   intro:
-    "Tens uma dúvida sobre uma receita ou um pedido de algo novo? Envia-me uma mensagem e eu respondo o mais rápido possível.",
+    "Para entrares em contacto comigo, preenche o formulário abaixo. Podes também usar o email {{siteConfig.email}}.",
 
   // Visibility ------------------------------------------------------------
   /** Master switch for the contact form and its nav links. */

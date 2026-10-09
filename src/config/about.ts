@@ -30,14 +30,14 @@ export const about = {
   heading: "Sobre mim",
   /** Single intro paragraph under the heading. Also feeds the page meta and the "Sobre mim" card in the recipe sidebar. */
   intro:
-    "Sou o João Nuno. Aprendi a cozinhar a viver em Itália e registo aqui as receitas que faço.",
+    "Sou o João Nuno. Aprendi a cozinhar a viver em Itália e registo aqui as receitas que faço. Este sítio é o meu caderno de receitas.",
 
   // Profile ------------------------------------------------------------
   greetingPrefix: "Olá, o meu nome é",
   /** Exactly two paragraphs under the greeting. */
   bio: [
     "Sou o João Nuno. Vivi um ano em Itália e foi aí que aprendi a cozinhar, por necessidade e depois por hábito.",
-    "Cozinho sobretudo cozinha italiana simples e algumas sobremesas. Este site é o meu caderno de receitas: registo o que faço para poder repetir.",
+    "Este sítio é o meu caderno de receitas onde registo o que faço para poder repetir.",
   ] as [string, string],
   /**
    * Call-to-action under the bio. Set `buttonLabel` to "" to hide it.
