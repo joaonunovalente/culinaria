@@ -2,7 +2,7 @@
 
 ## Sobre
 
-**Culinária** é um caderno de receitas criado por [João Nuno Valente](https://github.com/joaonunovalente).
+**Culinária** é um caderno de receitas.
 
 
 ## Como correr localmente
@@ -15,13 +15,13 @@
 ### Instalação
 
 ```bash
-# Clona o repositório
+# Clonar o repositório
 git clone https://github.com/joaonunovalente/culinaria.git
 
-# Acede à pasta
+# Aceder à pasta
 cd culinaria
 
-# Instala as dependências
+# Instalar as dependências
 npm install
 ```
 
@@ -57,4 +57,4 @@ culinaria/
 
 ## Autor
 
-**[João Nuno Valente](https://joaonunovalente.com)**.
+João Nuno Valente
