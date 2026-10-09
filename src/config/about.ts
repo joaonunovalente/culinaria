@@ -24,20 +24,20 @@ export const about = {
   /** Profile image + author greeting/bio. */
   showProfile: true,
   /** The three-card "A little more about me" grid. */
-  showFacts: true,
+  showFacts: false,
 
   // Hero ---------------------------------------------------------------
   heading: "Sobre mim",
   /** Single intro paragraph under the heading. Also feeds the page meta and the "Sobre mim" card in the recipe sidebar. */
   intro:
-    "Sou o João Nuno e tive de aprender a cozinhar sozinho em Itália. Hoje em dia, faço-o com todo o gosto.",
+    "Sou o João Nuno. Aprendi a cozinhar a viver em Itália e registo aqui as receitas que faço.",
 
   // Profile ------------------------------------------------------------
   greetingPrefix: "Olá, o meu nome é",
   /** Exactly two paragraphs under the greeting. */
   bio: [
-    "Sou o João Nuno, alguém que teve que aprender a cozinhar sozinho em Itália. Faço receitas simples e saborosas que depois partilho aqui.",
-    "Este espaço serve primeiramente para registar as receitas que faço. Espero que outras pessoas possam tirar partido delas e que, quem sabe, se inspirem a cozinhar também.",
+    "Sou o João Nuno. Vivi um ano em Itália e foi aí que aprendi a cozinhar, por necessidade e depois por hábito.",
+    "Cozinho sobretudo cozinha italiana simples e algumas sobremesas. Este site é o meu caderno de receitas: registo o que faço para poder repetir.",
   ] as [string, string],
   /**
    * Call-to-action under the bio. Set `buttonLabel` to "" to hide it.
@@ -55,25 +55,25 @@ export const about = {
 
   // Facts --------------------------------------------------------------
   /** Heading above the three cards. The grid is fixed at exactly three cards. */
-  factsHeading: "Um pouco mais sobre mim",
+  factsHeading: "O que cozinho",
   facts: [
     {
       image: "/images/about-photo-2.webp",
       imageAlt: "Mulher a cozinhar na cozinha",
-      title: "Sabor de Itália",
-      text: "Dedico-me principalmente à cozinha italiana, recriando massas, molhos e sobremesas tradicionais.",
+      title: "Cozinha italiana",
+      text: "Massas, molhos e pratos do dia-a-dia, com base na cozinha italiana.",
     },
     {
       image: "/images/about-photo-3.webp",
       imageAlt: "Curgete num tabuleiro de forno",
-      title: "Ingredientes frescos",
-      text: "Gosto de usar ingredientes frescos de época e básicos para criar as minhas receitas.",
+      title: "Ingredientes de época",
+      text: "Receitas simples, com ingredientes fáceis de encontrar e da estação.",
     },
     {
       image: "/images/about-photo-4.webp",
       imageAlt: "Mulher a cozinhar na cozinha",
-      title: "Paixão por chocolate",
-      text: "Tenho uma fraqueza: sobremesas com chocolate! Gosto de partilhar receitas doces fáceis de fazer.",
+      title: "Chocolate",
+      text: "Sobremesas simples, muitas com chocolate. São as que mais repito.",
     },
   ] as [AboutFact, AboutFact, AboutFact],
 

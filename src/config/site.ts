@@ -4,8 +4,7 @@ export const siteConfig = {
   name: "Culinária",
   tagline: "Blog de receitas de João Nuno Valente",
   title: "Culinária | Blog de receitas de João Nuno Valente",
-  description:
-    "Culinária é um blog de receitas de João Nuno Valente, onde partilha receitas deliciosas e dicas de culinária para todos os gostos. Explora receitas saborosas e fáceis de fazer.",
+  description: "Culinária é o caderno de receitas de João Nuno Valente, com receitas simples do dia-a-dia e algumas sobremesas.",
   siteUrl: "https://culinaria.joaonunovalente.com",
   authorName: "João Nuno Valente",
   email: "hello@joaonunovalente.com",
