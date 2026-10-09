@@ -18,11 +18,11 @@ export const home = {
     /** Set to false to hide the whole teaser from the homepage. */
     enabled: true,
 
-    heading: "Cozinha italiana simples",
+    heading: "Um pouco sobre mim",
     /** Paragraphs under the heading, in order. */
     text: [
-      "Sou o João Nuno. Aprendi a cozinhar a viver em Itália e registo aqui as receitas que faço.",
-      "Cozinho sobretudo cozinha italiana simples e algumas sobremesas. Uso ingredientes da estação e fáceis de encontrar.",
+      "Vivi um ano em Itália e foi aí que aprendi a cozinhar, por necessidade e depois por hábito.",
+      "Este sítio é o meu caderno de receitas onde registo o que faço para poder repetir.",
     ],
 
     /** Primary call to action. Set `buttonLabel` to "" to hide it. */
