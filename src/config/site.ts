@@ -1,10 +1,17 @@
 import { categories, categorySlug } from "@/config/categories";
 
+const siteName = "Culinária";
+const siteTagline = "Caderno de receitas de João Nuno Valente";
+
 export const siteConfig = {
-  name: "Culinária",
-  tagline: "Caderno de receitas de João Nuno Valente",
-  title: "Culinária | Caderno de receitas de João Nuno Valente",
-  description: "Culinária é o caderno de receitas de João Nuno Valente, com receitas simples do dia-a-dia e algumas sobremesas.",
+  name: siteName,
+  tagline: siteTagline,
+  /** Separador usado entre o título da página e o nome do site. */
+  titleSeparator: "|",
+  /** Título da página inicial. Páginas internas usam `Página | Culinária` via `buildPageTitle`. */
+  title: `${siteName} | ${siteTagline}`,
+  description:
+    "Culinária é o caderno de receitas de João Nuno Valente, com receitas simples do dia-a-dia e algumas sobremesas.",
   siteUrl: "https://culinaria.joaonunovalente.com",
   authorName: "João Nuno Valente",
   email: "hello@joaonunovalente.com",

@@ -1,5 +1,6 @@
 ---
 import { siteConfig } from "@/config/site";
+import { buildPageTitle } from "@/lib/seo";
 import { absoluteUrl, canonicalUrl } from "@/lib/url";
 import "@fontsource/inter/400.css";
 import "@fontsource/inter/500.css";
@@ -24,7 +25,7 @@ interface Props {
 }
 
 const {
-  title = siteConfig.title,
+  title,
   description = siteConfig.description,
   image = siteConfig.socialImage,
   imageWidth = 1200,
@@ -38,7 +39,7 @@ const {
 
 const canonical = canonicalUrl(Astro.url.pathname);
 const absoluteImage = absoluteUrl(image);
-const pageTitle = title === siteConfig.title ? title : `${title} | ${siteConfig.title}`;
+const pageTitle = buildPageTitle(title);
 const defaultStructuredData = {
   "@context": "https://schema.org",
   "@type": "WebSite",
